@@ -14,10 +14,10 @@ public class Client {
     private int id;
 
     @NotNull
-    private String imie;
+    private String name;
 
     @NotNull
-    private String nazwisko;
+    private String lastname;
 
     @NotNull
     private String email;
@@ -30,17 +30,17 @@ public class Client {
     public Client() {
     }
 
-    public Client(String imie, String nazwisko, String email, String password, String phoneNumber) {
-        this.imie = imie;
-        this.nazwisko = nazwisko;
+    public Client(String name, String lastname, String email, String password, String phoneNumber) {
+        this.name = name;
+        this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
     }
 
     public Client(String imie, String nazwisko, String email, String password) {
-        this.imie = imie;
-        this.nazwisko = nazwisko;
+        this.name = imie;
+        this.lastname = nazwisko;
         this.email = email;
         this.password = password;
     }
@@ -53,20 +53,20 @@ public class Client {
         this.id = id;
     }
 
-    public String getImie() {
-        return imie;
+    public String getName() {
+        return name;
     }
 
-    public void setImie(String imie) {
-        this.imie = imie;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getNazwisko() {
-        return nazwisko;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setNazwisko(String nazwisko) {
-        this.nazwisko = nazwisko;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getEmail() {
@@ -97,8 +97,8 @@ public class Client {
     public String toString() {
         return "Client{" +
                 "id=" + id +
-                ", imie='" + imie + '\'' +
-                ", nazwisko='" + nazwisko + '\'' +
+                ", name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
