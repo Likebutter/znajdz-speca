@@ -5,9 +5,7 @@ import com.example.Client.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class TestController {
@@ -30,5 +28,16 @@ public class TestController {
 
         clientRepository.save(client);
         return new ResponseEntity<Client>(client,HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/client/{id}")
+    public ResponseEntity<Client> getClient(@PathVariable Integer id) {
+
+        Client client = clientRepository.findOne(id);
+
+        if(client == null)
+            return new ResponseEntity<Client>(HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<Client>(client, HttpStatus.OK);
     }
 }
