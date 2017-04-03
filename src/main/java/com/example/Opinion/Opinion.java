@@ -14,9 +14,6 @@ public class Opinion {
     @GeneratedValue
     private int id;
 
-    @Column(columnDefinition = "default 0")
-    private int rate;
-
     @NotNull
     private Date date;
 
@@ -26,6 +23,7 @@ public class Opinion {
     private Job job;
 
     private String text;
+    private int rate;
 
     public Opinion() {
     }

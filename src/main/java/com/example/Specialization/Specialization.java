@@ -1,4 +1,4 @@
-package com.example.Range;
+package com.example.Specialization;
 
 
 import com.example.Company.Company;
@@ -7,8 +7,8 @@ import com.example.Tag.Tag;
 
 import javax.persistence.*;
 
-@Entity
-public class Range {
+@Entity(name = "taggroup")
+public class Specialization {
 
     @Id
     @GeneratedValue
@@ -29,10 +29,10 @@ public class Range {
                 referencedColumnName = "ID")
     private Job job;
 
-    public Range() {
+    public Specialization() {
     }
 
-    public Range(Tag tag, Company company, Job job) {
+    public Specialization(Tag tag, Company company, Job job) {
         this.tag = tag;
         this.company = company;
         this.job = job;
@@ -48,7 +48,7 @@ public class Range {
 
     @Override
     public String toString() {
-        return "Range{" +
+        return "Specialization{" +
                 "tag=" + tag +
                 ", company=" + company +
                 ", job=" + job +

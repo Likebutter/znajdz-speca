@@ -22,6 +22,12 @@ public class Company {
     @NotNull
     private String password;
 
+    @NotNull
+    private String localization;
+
+    @NotNull
+    private Integer areaRange;
+
     private String phone;
     private String descript;
     private String avatar;
@@ -32,16 +38,20 @@ public class Company {
     public Company() {
     }
 
-    public Company(String name, String email, String password) {
+    public Company(String name, String email, String password, String localization, Integer areaRange) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.localization = localization;
+        this.areaRange = areaRange;
     }
 
-    public Company(String name, String email, String password, String phone, String descript, String avatar, float avgRating, int numberJobs, int numberOpinions) {
+    public Company(String name, String email, String password, String localization, Integer areaRange, String phone, String descript, String avatar, float avgRating, int numberJobs, int numberOpinions) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.localization = localization;
+        this.areaRange = areaRange;
         this.phone = phone;
         this.descript = descript;
         this.avatar = avatar;
@@ -80,6 +90,22 @@ public class Company {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getLocalization() {
+        return localization;
+    }
+
+    public void setLocalization(String localization) {
+        this.localization = localization;
+    }
+
+    public Integer getAreaRange() {
+        return areaRange;
+    }
+
+    public void setAreaRange(Integer areaRange) {
+        this.areaRange = areaRange;
     }
 
     public String getPhone() {
