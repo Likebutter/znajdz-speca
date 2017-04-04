@@ -110,6 +110,22 @@ public class Job {
         this.visible = visible;
     }
 
+    public String getLocalization() {
+        return localization;
+    }
+
+    public void setLocalization(String localization) {
+        this.localization = localization;
+    }
+
+    public Integer getAreaRange() {
+        return areaRange;
+    }
+
+    public void setAreaRange(Integer areaRange) {
+        this.areaRange = areaRange;
+    }
+
     public Company getCompany() {
         return company;
     }
@@ -133,6 +149,8 @@ public class Job {
     public void setDescript(String descript) {
         this.descript = descript;
     }
+
+
 
     @Override
     public String toString() {
