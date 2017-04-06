@@ -11,7 +11,8 @@ import java.util.Date;
 public class Opinion {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "public")
+    @SequenceGenerator(name = "public", sequenceName = "opinion_seq", initialValue = 1, allocationSize = 1)
     private int id;
 
     @NotNull

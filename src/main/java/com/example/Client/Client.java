@@ -1,16 +1,15 @@
 package com.example.Client;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class Client {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "public")
+    @SequenceGenerator(name = "public", sequenceName = "client_seq", initialValue = 1, allocationSize = 1)
     private int id;
 
     @NotNull

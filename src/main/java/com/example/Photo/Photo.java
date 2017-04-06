@@ -12,7 +12,8 @@ import javax.validation.constraints.NotNull;
 public class Photo {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "public")
+    @SequenceGenerator(name = "public", sequenceName = "photo_seq", initialValue = 1, allocationSize = 1)
     private int id;
 
     @ManyToOne

@@ -11,7 +11,8 @@ import javax.persistence.*;
 public class Specialization {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "public")
+    @SequenceGenerator(name = "public", sequenceName = "spec_seq", initialValue = 1, allocationSize = 1)
     private int id;
 
     @ManyToOne

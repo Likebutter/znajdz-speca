@@ -12,7 +12,8 @@ import java.sql.Date;
 public class Job {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "public")
+    @SequenceGenerator(name = "public", sequenceName = "job_seq", initialValue = 1, allocationSize = 1)
     private int id;
 
     @NotNull
@@ -55,6 +56,13 @@ public class Job {
         this.company = company;
         this.client = client;
         this.descript = descript;
+    }
+
+    public Job(JobRequest request) {
+        this.beginDate = request.getBeginDate();
+        this.endDate = request.getEndDate();
+        this.localization = request.getLocalization();
+        this.descript = request.getDescript();
     }
 
     public int getId() {
