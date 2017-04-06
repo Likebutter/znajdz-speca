@@ -16,22 +16,7 @@ public class Job {
     private int id;
 
     @NotNull
-    private Date beginDate;
-
-    @NotNull
-    private Date endDate;
-
-    @NotNull
-    private Date addedAt;
-
-    @NotNull
     private Boolean visible;
-
-    @NotNull
-    private String localization;
-
-    @NotNull
-    private Integer areaRange;
 
     @ManyToOne
     @JoinColumn(name = "companyId",
@@ -43,28 +28,30 @@ public class Job {
                 referencedColumnName = "ID")
     private Client client;
 
+    private Date beginDate;
+    private Date endDate;
+    private Date addedAt;
+    private String localization;
     private String descript;
 
     public Job() {
     }
 
-    public Job(Date beginDate, Date endDate, Date addedAt, Boolean visible, String localization, Integer areaRange, Client client) {
+    public Job(Date beginDate, Date endDate, Date addedAt, Boolean visible, String localization, Client client) {
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.addedAt = addedAt;
         this.visible = visible;
         this.localization = localization;
-        this.areaRange = areaRange;
         this.client = client;
     }
 
-    public Job(Date beginDate, Date endDate, Date addedAt, Boolean visible, String localization, Integer areaRange, Company company, Client client, String descript) {
+    public Job(Date beginDate, Date endDate, Date addedAt, Boolean visible, String localization, Company company, Client client, String descript) {
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.addedAt = addedAt;
         this.visible = visible;
         this.localization = localization;
-        this.areaRange = areaRange;
         this.company = company;
         this.client = client;
         this.descript = descript;
@@ -116,14 +103,6 @@ public class Job {
 
     public void setLocalization(String localization) {
         this.localization = localization;
-    }
-
-    public Integer getAreaRange() {
-        return areaRange;
-    }
-
-    public void setAreaRange(Integer areaRange) {
-        this.areaRange = areaRange;
     }
 
     public Company getCompany() {
