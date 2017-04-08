@@ -29,6 +29,7 @@ public class JobController {
         if(!correct)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        //TODO: po wprowadzeniu tokenów dodać sprawdzanie, czy taki użytkownik jest w bazie
         Job newJob = generateJobObject(request);
         jobRepository.save(newJob);
         JobResponse response = new JobResponse(newJob);
