@@ -27,7 +27,7 @@ public class Company {
     @NotNull
     private Integer areaRange;
 
-    private String phone;
+    private String phoneNumber;
     private String descript;
     private String avatar;
     private float avgRating;
@@ -45,13 +45,13 @@ public class Company {
         this.areaRange = areaRange;
     }
 
-    public Company(String name, String email, String password, String localization, Integer areaRange, String phone, String descript, String avatar, float avgRating, int numberJobs, int numberOpinions) {
+    public Company(String name, String email, String password, String localization, Integer areaRange, String phoneNumber, String descript, String avatar, float avgRating, int numberJobs, int numberOpinions) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.localization = localization;
         this.areaRange = areaRange;
-        this.phone = phone;
+        this.phoneNumber = phoneNumber;
         this.descript = descript;
         this.avatar = avatar;
         this.avgRating = avgRating;
@@ -107,12 +107,12 @@ public class Company {
         this.areaRange = areaRange;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getDescript() {
@@ -162,7 +162,7 @@ public class Company {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", phone='" + phone + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", descript='" + descript + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", avgRating=" + avgRating +

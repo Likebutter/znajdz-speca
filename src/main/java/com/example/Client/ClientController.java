@@ -1,9 +1,17 @@
 package com.example.Client;
 
+import com.example.Job.Job;
+import com.example.Job.JobRepository;
+import com.example.Job.JobResponse;
+import com.example.Specialization.SpecializationRepository;
+import com.example.Tag.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class ClientController {
@@ -11,12 +19,18 @@ public class ClientController {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private JobRepository jobRepository;
+
+    @Autowired
+    private SpecializationRepository specializationRepository;
+
     public ClientController() {
 
     }
 
 
-    @PostMapping(value = "/klient")
+    @PostMapping(value = "/client")
     public ResponseEntity<ClientResponse> registerNewClient(@RequestBody Client newClient) {
 
         Boolean correct = checkIfCorrectRequest(newClient);
@@ -33,7 +47,7 @@ public class ClientController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/klient/{id}")
+    @PutMapping(value = "/client/{id}")
     public ResponseEntity<ClientResponse> updateExistingClient(@PathVariable Integer id, @RequestBody Client updatedClient) {
 
         Boolean correct = checkIfCorrectRequest(updatedClient);
@@ -59,7 +73,7 @@ public class ClientController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/klient/{id}")
+    @GetMapping(value = "/client/{id}")
     public ResponseEntity<ClientResponse> getClientData(@PathVariable Integer id) {
 
         Client client = clientRepository.findById(id);
@@ -72,6 +86,20 @@ public class ClientController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/client/{id}/jobs")
+    public ResponseEntity<List<JobResponse>> getClientJobs(@PathVariable Integer id) {
+
+        Client client = clientRepository.findById(id);
+
+        if(client == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        List<Job> queryResult = jobRepository.findAllByClient(client);
+        List<JobResponse> response = generateListJobResponse(queryResult);
+
+        return new ResponseEntity<List<JobResponse>>(response, HttpStatus.OK);
+    }
+
     private Boolean checkIfCorrectRequest(Client client) {
 
         if(client.getEmail() == null)   return false;
@@ -81,4 +109,18 @@ public class ClientController {
 
         return true;
     }
+
+    private List<JobResponse> generateListJobResponse(List<Job> jobs) {
+
+        List<JobResponse> jobResponses = new ArrayList<JobResponse>();
+
+        for(Job job : jobs) {
+            List<Tag> tags = specializationRepository.findAllTagByJob(job);
+            JobResponse response = new JobResponse(job, tags);
+            jobResponses.add(response);
+        }
+
+        return jobResponses;
+    }
+
 }

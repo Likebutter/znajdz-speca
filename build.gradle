@@ -27,6 +27,8 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-rest')
 	compile('org.springframework.boot:spring-boot-starter-validation')
 	compile('org.springframework.boot:spring-boot-starter-web-services')
+	compile('com.google.code.gson:gson:2.7')
+    compile ('com.google.maps:google-maps-services:0.1.19')
 	runtime('org.postgresql:postgresql')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

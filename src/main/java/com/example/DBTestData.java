@@ -3,6 +3,9 @@ package com.example;
 
 import com.example.Client.Client;
 import com.example.Client.ClientRepository;
+import com.example.Company.Company;
+import com.example.Tag.Tag;
+import com.example.Tag.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -15,6 +18,9 @@ public class DBTestData implements CommandLineRunner {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private TagRepository tagRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -26,5 +32,12 @@ public class DBTestData implements CommandLineRunner {
         client.setPhoneNumber("123456789");
         clientRepository.save(client);
 
+        Tag tag1 = new Tag();
+        tag1.setName("abc");
+        tagRepository.save(tag1);
+
+        Tag tag2 = new Tag();
+        tag2.setName("def");
+        tagRepository.save(tag2);
     }
 }

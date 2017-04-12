@@ -2,6 +2,7 @@ package com.example.Job;
 
 
 import java.sql.Date;
+import java.util.List;
 
 public class JobRequest {
 
@@ -9,15 +10,17 @@ public class JobRequest {
     private Date endDate;
     private String localization;
     private String descript;
+    private List<String> tags;
 
     public JobRequest() {
     }
 
-    public JobRequest(Date beginDate, Date endDate, String localization, String descript) {
+    public JobRequest(Date beginDate, Date endDate, String localization, String descript, List<String> tags) {
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.localization = localization;
         this.descript = descript;
+        this.tags = tags;
     }
 
     public Date getBeginDate() {
@@ -50,6 +53,14 @@ public class JobRequest {
 
     public void setDescript(String descript) {
         this.descript = descript;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     @Override
