@@ -9,7 +9,9 @@ import javax.persistence.*;
 public class Submission {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "public")
+    @SequenceGenerator(name = "public", sequenceName = "sub_seq", initialValue = 1, allocationSize = 1)
+
     private int id;
 
     @ManyToOne(optional = false)
