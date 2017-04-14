@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -56,12 +57,18 @@ public class JobController {
         Job job = jobRepository.findOne(id);
 
         if(job == null)
-            return new ResponseEntity<JobResponse>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        List<Tag> tags = specializationRepository.findAllTagByJob(job);
+        List<Specialization> specs = specializationRepository.findAllByJob(job);
+        List<Tag> tags = new ArrayList<>();
+
+        for(Specialization spec : specs) {
+            tags.add(spec.getTag());
+        }
+
         JobResponse response = new JobResponse(job, tags);
 
-        return new ResponseEntity<JobResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //TODO: Po dodaniu tokenów zakodować sprawdzanie, czy Job należy do klienta określonego przez token
@@ -71,7 +78,7 @@ public class JobController {
         Job job = jobRepository.findOne(id);
 
         if(job == null)
-            return new ResponseEntity<JobResponse>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         /*
         Client client = clientRepository.findByEmail(mail);
@@ -82,12 +89,12 @@ public class JobController {
          */
 
         if(job.getCompany() != null) {
-            return new ResponseEntity<JobResponse>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
         jobRepository.delete(id);
 
-        return new ResponseEntity<JobResponse>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     private Boolean checkIfCorrectRequest(JobRequest job) {

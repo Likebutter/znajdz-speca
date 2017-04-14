@@ -10,6 +10,19 @@ import java.util.List;
 
 public interface SpecializationRepository extends CrudRepository<Specialization, Integer>{
 
+    List<Specialization> findAllByJob(Job job);
+
+    List<Specialization> findAllByJobIn(List<Job> job);
+
+    List<Specialization> findAllByCompany(Company company);
+
+    List<Specialization> findAllByCompanyIn(List<Company> company);
+
+    List<Specialization> findAllByTag(Tag tag);
+
+    List<Specialization> findAllByTagIn(List<Tag> tag);
+
+    /*
     List<Tag> findAllTagByJob(Job job);
 
     List<Tag> findAllTagByCompany(Company company);
@@ -17,4 +30,5 @@ public interface SpecializationRepository extends CrudRepository<Specialization,
     List<Job> findAllJobByTagIn(List<Tag> tag);
 
     List<Company> findAllCompanyByTagIn(List<Tag> tag);
+    */
 }

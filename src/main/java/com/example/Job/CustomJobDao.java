@@ -5,6 +5,7 @@ import com.example.Search.SearchJobRequest;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
@@ -21,7 +22,7 @@ public class CustomJobDao {
     public String buildSqlQuery(SearchJobRequest request) {
 
         Boolean checkedForTags = false;
-        StringBuilder stringBuilder = new StringBuilder("SELECT job.* FROM job ");
+        StringBuilder stringBuilder = new StringBuilder("SELECT * FROM job ");
 
         String tagCondition = checkForTags(request);
         if(!tagCondition.isEmpty()) {
@@ -41,14 +42,14 @@ public class CustomJobDao {
 
     }
 
-    public List<?> executeSqlQuery(String sqlQuery) {
+    public List<Job> executeSqlQuery(String sqlQuery) {
 
-        Query query = entityManager.createNativeQuery(sqlQuery);
+        Query query = entityManager.createNativeQuery(sqlQuery, Job.class);
 
         return query.getResultList();
     }
 
-    public List<?> buildAndExecuteSqlQuery(SearchJobRequest request) {
+    public List<Job> buildAndExecuteSqlQuery(SearchJobRequest request) {
 
         String sqlQuery = buildSqlQuery(request);
 

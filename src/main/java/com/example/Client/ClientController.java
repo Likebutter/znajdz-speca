@@ -3,6 +3,7 @@ package com.example.Client;
 import com.example.Job.Job;
 import com.example.Job.JobRepository;
 import com.example.Job.JobResponse;
+import com.example.Specialization.Specialization;
 import com.example.Specialization.SpecializationRepository;
 import com.example.Tag.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +98,7 @@ public class ClientController {
         List<Job> queryResult = jobRepository.findAllByClient(client);
         List<JobResponse> response = generateListJobResponse(queryResult);
 
-        return new ResponseEntity<List<JobResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     private Boolean checkIfCorrectRequest(Client client) {
@@ -112,10 +113,16 @@ public class ClientController {
 
     private List<JobResponse> generateListJobResponse(List<Job> jobs) {
 
-        List<JobResponse> jobResponses = new ArrayList<JobResponse>();
+        List<JobResponse> jobResponses = new ArrayList<>();
 
         for(Job job : jobs) {
-            List<Tag> tags = specializationRepository.findAllTagByJob(job);
+            List<Specialization> specs = specializationRepository.findAllByJob(job);
+            List<Tag> tags = new ArrayList<>();
+
+            for(Specialization spec : specs) {
+                tags.add(spec.getTag());
+            }
+
             JobResponse response = new JobResponse(job, tags);
             jobResponses.add(response);
         }
