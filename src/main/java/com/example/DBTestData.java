@@ -4,6 +4,7 @@ package com.example;
 import com.example.Client.Client;
 import com.example.Client.ClientRepository;
 import com.example.Company.Company;
+import com.example.Company.CompanyRepository;
 import com.example.Job.Job;
 import com.example.Job.JobRepository;
 import com.example.Specialization.Specialization;
@@ -28,6 +29,9 @@ public class DBTestData implements CommandLineRunner {
     private ClientRepository clientRepository;
 
     @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
     private TagRepository tagRepository;
 
     @Autowired
@@ -46,6 +50,14 @@ public class DBTestData implements CommandLineRunner {
         client.setPassword("12345678");
         client.setPhoneNumber("123456789");
         clientRepository.save(client);
+
+        Company company = new Company();
+        company.setName("Kowalscy");
+        company.setAreaRange(25);
+        company.setLocalization("Warszawa");
+        company.setEmail("kowalscy@example.com");
+        company.setPassword("12345678");
+        companyRepository.save(company);
 
         Character name = 'a';
         int tagsNumber = 15;
@@ -140,18 +152,18 @@ public class DBTestData implements CommandLineRunner {
     private void fillLocalsTable(String[] localsTable) {
 
         localsTable[0] = "Warszawa";
-        localsTable[1] = "Płock";
+        localsTable[1] = "Plock";
         localsTable[2] = "Gdynia";
         localsTable[3] = "Sopot";
         localsTable[4] = "Katowice";
         localsTable[5] = "Zakopane";
-        localsTable[6] = "Wrocław";
+        localsTable[6] = "Wroclaw";
         localsTable[7] = "Lublin";
-        localsTable[8] = "Zamość";
+        localsTable[8] = "Zamosc";
         localsTable[9] = "Szczecin";
-        localsTable[10] = "Gdańsk";
-        localsTable[11] = "Toruń";
-        localsTable[12] = "Pruszków";
+        localsTable[10] = "Gdansk";
+        localsTable[11] = "Torun";
+        localsTable[12] = "Pruszkow";
         localsTable[13] = "Kielce";
         localsTable[14] = "Zabrze";
     }

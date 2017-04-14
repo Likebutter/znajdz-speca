@@ -38,6 +38,8 @@ public class CustomJobDao {
         if(!localizationCondition.isEmpty())
             stringBuilder.append(localizationCondition);
 
+        stringBuilder.append("AND (visible = true) ");
+
         return stringBuilder.toString();
 
     }
