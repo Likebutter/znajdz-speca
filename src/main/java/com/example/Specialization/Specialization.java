@@ -7,12 +7,12 @@ import com.example.Tag.Tag;
 
 import javax.persistence.*;
 
-@Entity(name = "taggroup")
+@Entity
 public class Specialization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "public")
-    @SequenceGenerator(name = "public", sequenceName = "spec_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "public", sequenceName = "specialization_seq", initialValue = 1, allocationSize = 1)
     private int id;
 
     @ManyToOne
@@ -33,10 +33,14 @@ public class Specialization {
     public Specialization() {
     }
 
-    public Specialization(Tag tag, Company company, Job job) {
+    public Specialization(Tag tag, Job job) {
+        this.tag = tag;
+        this.job = job;
+    }
+
+    public Specialization(Tag tag, Company company) {
         this.tag = tag;
         this.company = company;
-        this.job = job;
     }
 
     public Tag getTag() {

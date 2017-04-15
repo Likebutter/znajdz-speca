@@ -10,7 +10,7 @@ public class Submission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "public")
-    @SequenceGenerator(name = "public", sequenceName = "sub_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "public", sequenceName = "submission_seq", initialValue = 1, allocationSize = 1)
 
     private int id;
 
