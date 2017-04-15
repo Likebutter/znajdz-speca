@@ -7,22 +7,27 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.sql.Date;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 public class CustomJobDao {
 
     @PersistenceContext
     private EntityManager entityManager;
 
+    private Map<String, String> mappedNames;
+
     public CustomJobDao() {
 
+        mappedNames = new HashMap<>();
+        mappedNames.put("beginDate", "begin_date");
+        mappedNames.put("endDate", "end_date");
+        mappedNames.put("localization", "localization");
     }
 
     public String buildSqlQuery(SearchJobRequest request) {
 
         Boolean checkedForTags = false;
-        StringBuilder stringBuilder = new StringBuilder("SELECT * FROM job ");
+        StringBuilder stringBuilder = new StringBuilder("SELECT DISTINCT job.* FROM job ");
 
         String tagCondition = checkForTags(request);
         if(!tagCondition.isEmpty()) {
@@ -39,6 +44,16 @@ public class CustomJobDao {
             stringBuilder.append(localizationCondition);
 
         stringBuilder.append("AND (visible = true) ");
+
+        if(request.getSortedBy() == null)
+            stringBuilder.append("ORDER BY begin_date ");
+        else
+            stringBuilder.append("ORDER BY " + mappedNames.get(request.getSortedBy()) + " ");
+
+        if(request.getOrder() == null)
+            stringBuilder.append("ASC");
+        else
+            stringBuilder.append(request.getOrder());
 
         return stringBuilder.toString();
 
@@ -113,10 +128,10 @@ public class CustomJobDao {
         StringBuilder builder = new StringBuilder();
 
         if(request.getTags() != null) {
-            builder.append("JOIN specialization ON job.id = specialization.job_id JOIN tag ON specialization.tag_id = tag.id ");
-            builder.append("WHERE (tag.name IN (");
+            builder.append("JOIN specialization ON job.id = specialization.job_id WHERE specialization.job_id IN (");
             List<String> tags = request.getTags();
 
+            builder.append("SELECT job_id FROM specialization JOIN tag on specialization.tag_id = tag.id WHERE tag.name IN (");
             for(int i = 0; i < tags.size(); i++) {
                 builder.append("'" + tags.get(i) + "'");
 
@@ -125,7 +140,7 @@ public class CustomJobDao {
                 }
             }
 
-            builder.append(")) ");
+            builder.append(") GROUP BY job_id HAVING COUNT(job_id) = " + tags.size() + ") ");
         }
 
         return builder.toString();

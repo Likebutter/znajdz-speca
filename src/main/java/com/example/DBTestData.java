@@ -51,6 +51,34 @@ public class DBTestData implements CommandLineRunner {
         client.setPhoneNumber("123456789");
         clientRepository.save(client);
 
+        Client client1 = new Client();
+        client1.setName("Adam");
+        client1.setLastname("Malinowski");
+        client1.setEmail("adammalinowski@example.com");
+        client1.setPassword("12345678");
+        clientRepository.save(client1);
+
+        Client client2 = new Client();
+        client2.setName("Piotr");
+        client2.setLastname("Leszczyński");
+        client2.setEmail("piotrleszczynski@example.com");
+        client2.setPassword("12345678");
+        clientRepository.save(client2);
+
+        Client client3 = new Client();
+        client3.setName("Karolina");
+        client3.setLastname("Zawadzka");
+        client3.setEmail("karolinazawadzka@example.com");
+        client3.setPassword("12345678");
+        clientRepository.save(client3);
+
+        Client client4 = new Client();
+        client4.setName("Marzena");
+        client4.setLastname("Wtorek");
+        client4.setEmail("marzenawtorek@example.com");
+        client4.setPassword("12345678");
+        clientRepository.save(client4);
+
         Company company = new Company();
         company.setName("Kowalscy");
         company.setAreaRange(25);
@@ -59,9 +87,41 @@ public class DBTestData implements CommandLineRunner {
         company.setPassword("12345678");
         companyRepository.save(company);
 
+        Company company2 = new Company();
+        company2.setName("Budex");
+        company2.setAreaRange(75);
+        company2.setLocalization("Poznań");
+        company2.setEmail("budex@example.com");
+        company2.setPassword("12345678");
+        companyRepository.save(company2);
+
+        Company company3 = new Company();
+        company3.setName("Janusz");
+        company3.setAreaRange(62);
+        company3.setLocalization("Katowice");
+        company3.setEmail("januszcompany@example.com");
+        company3.setPassword("12345678");
+        companyRepository.save(company3);
+
+        Company company4 = new Company();
+        company4.setName("Impex");
+        company4.setAreaRange(40);
+        company4.setLocalization("Gdynia");
+        company4.setEmail("impex@example.com");
+        company4.setPassword("12345678");
+        companyRepository.save(company4);
+
+        Company company5 = new Company();
+        company5.setName("Era-Box");
+        company5.setAreaRange(120);
+        company5.setLocalization("Wrocław");
+        company5.setEmail("erabox@example.com");
+        company5.setPassword("12345678");
+        companyRepository.save(company5);
+
         Character name = 'a';
-        int tagsNumber = 15;
-        int jobsNumber = 20;
+        int tagsNumber = 10;
+        int jobsNumber = 30;
         int localsNumber = 15;
         String[] localizations = new String[localsNumber];
         fillLocalsTable(localizations);
@@ -89,7 +149,8 @@ public class DBTestData implements CommandLineRunner {
 
         for(int i = 0; i < jobsNumber; i++) {
             Job job = new Job();
-            job.setClient(client);
+            Client client5 = clientRepository.findById(1+random.nextInt(4));
+            job.setClient(client5);
             job.setVisible(true);
             job.setBeginDate(getRandomDate(beginDateTable));
             job.setEndDate(getRandomDate(endDateTable));
@@ -104,10 +165,13 @@ public class DBTestData implements CommandLineRunner {
 
             Job job = jobs.get(0);
             jobs.remove(0);
-            int tagsInJob = 1 + random.nextInt(3);
+            int tagsInJob = 3 + random.nextInt(4);
+            List<Tag> tagList = tagRepository.findAll();
 
             for(int j = 0; j < tagsInJob; j++) {
-                Tag tag = tagRepository.findById(1 + random.nextInt(tagsNumber));
+
+                Tag tag = tagList.get(random.nextInt(tagList.size()));
+                tagList.remove(tag);
                 Specialization specialization = new Specialization(tag, job);
                 specializationRepository.save(specialization);
             }
@@ -152,18 +216,18 @@ public class DBTestData implements CommandLineRunner {
     private void fillLocalsTable(String[] localsTable) {
 
         localsTable[0] = "Warszawa";
-        localsTable[1] = "Plock";
+        localsTable[1] = "Płock";
         localsTable[2] = "Gdynia";
         localsTable[3] = "Sopot";
         localsTable[4] = "Katowice";
         localsTable[5] = "Zakopane";
-        localsTable[6] = "Wroclaw";
+        localsTable[6] = "Wrocław";
         localsTable[7] = "Lublin";
-        localsTable[8] = "Zamosc";
+        localsTable[8] = "Zamość";
         localsTable[9] = "Szczecin";
-        localsTable[10] = "Gdansk";
-        localsTable[11] = "Torun";
-        localsTable[12] = "Pruszkow";
+        localsTable[10] = "Gdańsk";
+        localsTable[11] = "Toruń";
+        localsTable[12] = "Pruszków";
         localsTable[13] = "Kielce";
         localsTable[14] = "Zabrze";
     }

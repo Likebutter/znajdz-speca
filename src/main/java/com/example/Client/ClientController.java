@@ -96,6 +96,10 @@ public class ClientController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         List<Job> queryResult = jobRepository.findAllByClient(client);
+
+        if(queryResult.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
         List<JobResponse> response = generateListJobResponse(queryResult);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
