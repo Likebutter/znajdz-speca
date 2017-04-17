@@ -5,8 +5,10 @@ import com.example.Client.Client;
 import com.example.Client.ClientResponse;
 import com.example.Company.Company;
 import com.example.Company.CompanyResponse;
+import com.example.Tag.Tag;
 
 import java.util.Date;
+import java.util.List;
 
 public class JobResponse {
 
@@ -18,11 +20,12 @@ public class JobResponse {
     private String descript;
     private ClientResponse client;
     private CompanyResponse company;
+    private List<Tag> tags;
 
     public JobResponse() {
     }
 
-    public JobResponse(Integer id, Date beginDate, Date endDate, Date addedAt, String localization, String descript, Client client, Company company) {
+    public JobResponse(Integer id, Date beginDate, Date endDate, Date addedAt, String localization, String descript, Client client, Company company, List<Tag> tags) {
         this.id = id;
         this.beginDate = beginDate;
         this.endDate = endDate;
@@ -30,12 +33,13 @@ public class JobResponse {
         this.localization = localization;
         this.descript = descript;
         this.client = new ClientResponse(client);
+        this.tags = tags;
 
         if(company != null)
             this.company = new CompanyResponse(company);
     }
 
-    public JobResponse(Job job) {
+    public JobResponse(Job job, List<Tag> tags) {
         this.id = job.getId();
         this.beginDate = job.getBeginDate();
         this.endDate = job.getEndDate();
@@ -43,7 +47,10 @@ public class JobResponse {
         this.localization = job.getLocalization();
         this.descript = job.getDescript();
         this.client = new ClientResponse(job.getClient());
-        //this.company = new CompanyResponse((job.getCompany()));
+        this.tags = tags;
+
+        if(job.getCompany() != null)
+            this.company = new CompanyResponse((job.getCompany()));
     }
 
     public Integer getId() {
@@ -108,6 +115,14 @@ public class JobResponse {
 
     public void setCompany(CompanyResponse company) {
         this.company = company;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     @Override
