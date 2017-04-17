@@ -29,6 +29,9 @@ public class Client {
 
     private String phoneNumber;
 
+    @NotNull
+    private Boolean enabled;
+
     public Client(){}
 
     public Client(String name, String lastname, String email, String password, String phoneNumber) {
