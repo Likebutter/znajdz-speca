@@ -5,6 +5,7 @@ import com.example.Client.Client;
 import com.example.Client.ClientResponse;
 import com.example.Company.Company;
 import com.example.Company.CompanyResponse;
+import com.example.Photo.PhotoResponse;
 import com.example.Tag.Tag;
 
 import java.util.Date;
@@ -22,6 +23,7 @@ public class JobResponse {
     private ClientResponse client;
     private CompanyResponse company;
     private List<Tag> tags;
+    private List<PhotoResponse> photos;
 
     public JobResponse() {
     }
@@ -54,6 +56,11 @@ public class JobResponse {
 
         if(job.getCompany() != null)
             this.company = new CompanyResponse((job.getCompany()));
+    }
+
+    public JobResponse(Job job, List<Tag> tags, List<PhotoResponse> photos) {
+        this(job, tags);
+        this.photos = photos;
     }
 
     public Integer getId() {
@@ -134,6 +141,14 @@ public class JobResponse {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public List<PhotoResponse> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<PhotoResponse> photos) {
+        this.photos = photos;
     }
 
     @Override

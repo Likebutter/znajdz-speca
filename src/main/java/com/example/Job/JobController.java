@@ -2,10 +2,7 @@ package com.example.Job;
 
 import com.example.Client.Client;
 import com.example.Client.ClientRepository;
-import com.example.Photo.FileData;
-import com.example.Photo.PhotoDao;
-import com.example.Photo.PhotoRepository;
-import com.example.Photo.ServerPhotoRequest;
+import com.example.Photo.*;
 import com.example.Specialization.Specialization;
 import com.example.Specialization.SpecializationRepository;
 import com.example.Tag.Tag;
@@ -45,6 +42,9 @@ public class JobController {
 
     @Autowired
     private PhotoDao photoDao;
+
+    @Autowired
+    private PhotoRepository photoRepository;
 
     @PostMapping(value = "/job", consumes = "multipart/form-data")
     public ResponseEntity<JobResponse> addNewJob(@ModelAttribute JobRequest request) {
@@ -96,7 +96,14 @@ public class JobController {
             tags.add(spec.getTag());
         }
 
-        JobResponse response = new JobResponse(job, tags);
+        List<Photo> gallery = photoRepository.findAllByJob(job);
+        List<PhotoResponse> photos = new ArrayList<>();
+
+        for(Photo photo : gallery) {
+            photos.add(new PhotoResponse(photo));
+        }
+
+        JobResponse response = new JobResponse(job, tags, photos);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -124,6 +131,9 @@ public class JobController {
 
         List<Specialization> jobTags = specializationRepository.findAllByJob(job);
         specializationRepository.delete(jobTags);
+
+        List<Photo> photos = photoRepository.findAllByJob(job);
+        photoRepository.delete(photos);
 
         jobRepository.delete(id);
 
