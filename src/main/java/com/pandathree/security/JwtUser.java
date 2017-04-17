@@ -2,6 +2,7 @@ package com.pandathree.security;
 
 import com.pandathree.example.Client.Client;
 import com.pandathree.example.Company.Company;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,6 +11,7 @@ import java.util.Collection;
 /**
  * Created by Paweł on 2017-04-16.
  */
+@Data
 public class JwtUser implements UserDetails{
 
     private Client client;
