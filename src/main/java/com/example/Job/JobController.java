@@ -2,6 +2,7 @@ package com.example.Job;
 
 import com.example.Client.Client;
 import com.example.Client.ClientRepository;
+import com.example.Photo.FileData;
 import com.example.Photo.PhotoDao;
 import com.example.Photo.PhotoRepository;
 import com.example.Photo.ServerPhotoRequest;
@@ -9,6 +10,7 @@ import com.example.Specialization.Specialization;
 import com.example.Specialization.SpecializationRepository;
 import com.example.Tag.Tag;
 import com.example.Tag.TagRepository;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import javax.servlet.annotation.MultipartConfig;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,10 +68,26 @@ public class JobController {
             specializationRepository.save(new Specialization(tag, newJob));
         }
 
+        List<FileData> imagesData = new ArrayList<>();
+
         if((request.getImages() != null))
             if(!request.getImages().isEmpty())
             {
-                ServerPhotoRequest photoRequest = new ServerPhotoRequest(request.getImages(), newJob);
+                for(MultipartFile image : request.getImages()) {
+
+                    FileData data = new FileData();
+
+                    try {
+                        data.setContent(image.getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    data.setExtension(FilenameUtils.getExtension(image.getOriginalFilename()));
+                    imagesData.add(data);
+                }
+
+                ServerPhotoRequest photoRequest = new ServerPhotoRequest(imagesData, newJob);
                 photoDao.savePhotos(photoRequest);
             }
 

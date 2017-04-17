@@ -2,6 +2,9 @@ package com.example.Photo;
 
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.example.AWS.S3Util;
+import com.example.Company.Company;
+import com.example.Job.Job;
+import com.example.Opinion.Opinion;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,49 +27,48 @@ public class PhotoInsertThread extends Thread{
 
     public void run() {
 
-        saveImagesToDatabase(request);
+        saveImagesToDatabase();
     }
 
-    public void saveImagesToDatabase(ServerPhotoRequest request) {
+    public void saveImagesToDatabase() {
 
-        List<MultipartFile> images = request.getImages();
-
-        for(MultipartFile image : images) {
+        for(FileData image : request.getImages()) {
             String uploadKey = buildUploadKey(image);
             Boolean uploadSucceeded = storeInCloud(image, uploadKey);
             Photo photo;
 
             if(uploadSucceeded) {
-                photo = buildPhoto(request, uploadKey);
+                photo = buildPhoto(uploadKey);
                 photoRepository.save(photo);
             }
         }
     }
 
-    private String buildUploadKey(MultipartFile file) {
+    private String buildUploadKey(FileData file) {
 
-        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+        String extension = file.getExtension();
         String uploadKey = "znajdzspeca/images/" + keyValue + "." + extension;
         keyValue++;
 
         return uploadKey;
     }
 
-    private Boolean storeInCloud(MultipartFile file, String uploadKey) {
+    private Boolean storeInCloud(FileData file, String uploadKey) {
 
         PutObjectResult putObjectResult;
 
         try {
-            putObjectResult = s3Util.upload(file, uploadKey);
+            putObjectResult = s3Util.upload(file.getContent(), uploadKey);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
 
+        System.out.println("Udało się");
         return true;
     }
 
-    private Photo buildPhoto(ServerPhotoRequest request, String uploadKey) {
+    private Photo buildPhoto(String uploadKey) {
 
         Photo photo = new Photo();
         photo.setPhotoURL("https://s3-eu-west-1.amazonaws.com/pzprojektbucket/" + uploadKey);

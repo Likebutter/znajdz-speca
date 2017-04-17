@@ -2,7 +2,13 @@ package com.example.Photo;
 
 
 import com.example.AWS.S3Util;
+import com.example.Company.Company;
+import com.example.Job.Job;
+import com.example.Opinion.Opinion;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public class PhotoDao {
 
@@ -15,7 +21,7 @@ public class PhotoDao {
     private Integer keyValue;
 
     public PhotoDao() {
-        keyValue = 100;
+        keyValue = 101;
     }
 
     public void savePhotos(ServerPhotoRequest request) {
@@ -24,5 +30,4 @@ public class PhotoDao {
         thread.start();
         keyValue += request.getImages().size();
     }
-
 }

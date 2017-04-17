@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 
 @Service
@@ -39,9 +36,9 @@ public class S3Util {
         return putObjectResult;
     }
 
-    public PutObjectResult upload(MultipartFile multipartFile, String uploadKey) throws IOException {
+    public PutObjectResult upload(byte[] content, String uploadKey) throws IOException {
         PutObjectResult putObjectResult = new PutObjectResult();
-        putObjectResult = upload(multipartFile.getInputStream(), uploadKey);
+        putObjectResult = upload(new ByteArrayInputStream(content), uploadKey);
         return putObjectResult;
     }
 
