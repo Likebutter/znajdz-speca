@@ -2,6 +2,7 @@ package com.example.Job;
 
 import com.example.Client.Client;
 import com.example.Client.ClientRepository;
+import com.example.Photo.PhotoRepository;
 import com.example.Specialization.Specialization;
 import com.example.Specialization.SpecializationRepository;
 import com.example.Tag.Tag;
@@ -9,12 +10,18 @@ import com.example.Tag.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+import javax.servlet.annotation.MultipartConfig;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 @RestController
 public class JobController {
@@ -31,9 +38,13 @@ public class JobController {
     @Autowired
     private SpecializationRepository specializationRepository;
 
-    @PostMapping(value = "/job")
-    public ResponseEntity<JobResponse> addNewJob(@RequestBody JobRequest request) {
+    @Autowired
+    private PhotoRepository photoRepository;
 
+    @PostMapping(value = "/job", consumes = "multipart/form-data")
+    public ResponseEntity<JobResponse> addNewJob(@ModelAttribute JobRequest request) {
+
+        request.setClientId(1 + new Random().nextInt(5));
         Boolean correct = checkIfCorrectRequest(request);
 
         if(!correct)
@@ -46,7 +57,7 @@ public class JobController {
 
         Job newJob = generateJobObject(request);
         jobRepository.save(newJob);
-        List<Tag> tags = tagRepository.findByNameIn(request.getTags());
+        List<Tag> tags = tagRepository.findByNameIn(request.getSpecializations());
 
         for(Tag tag: tags) {
             specializationRepository.save(new Specialization(tag, newJob));
@@ -109,9 +120,9 @@ public class JobController {
 
         if(job.getBeginDate() == null) return false;
         if(job.getEndDate() == null) return false;
-        if(job.getLocalization() == null) return false;
-        if((job.getTags() == null) || (job.getTags().isEmpty())) return false;
-        if(job.getClientId() == null) return false;
+        if(job.getLocation() == null) return false;
+        if((job.getSpecializations() == null) || (job.getSpecializations().isEmpty())) return false;
+        //if(job.getClientId() == null) return false;
 
         return true;
     }

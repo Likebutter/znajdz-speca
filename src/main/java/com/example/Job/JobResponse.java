@@ -13,6 +13,7 @@ import java.util.List;
 public class JobResponse {
 
     private Integer id;
+    private String title;
     private Date beginDate;
     private Date endDate;
     private Date addedAt;
@@ -25,8 +26,9 @@ public class JobResponse {
     public JobResponse() {
     }
 
-    public JobResponse(Integer id, Date beginDate, Date endDate, Date addedAt, String localization, String descript, Client client, Company company, List<Tag> tags) {
+    public JobResponse(Integer id, String title, Date beginDate, Date endDate, Date addedAt, String localization, String descript, Client client, Company company, List<Tag> tags) {
         this.id = id;
+        this.title = title;
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.addedAt = addedAt;
@@ -41,6 +43,7 @@ public class JobResponse {
 
     public JobResponse(Job job, List<Tag> tags) {
         this.id = job.getId();
+        this.title = job.getTitle();
         this.beginDate = job.getBeginDate();
         this.endDate = job.getEndDate();
         this.addedAt = job.getAddedAt();
@@ -59,6 +62,14 @@ public class JobResponse {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Date getBeginDate() {

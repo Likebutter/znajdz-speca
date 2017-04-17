@@ -151,6 +151,9 @@ public class DBTestData implements CommandLineRunner {
             Job job = new Job();
             Client client5 = clientRepository.findById(1+random.nextInt(4));
             job.setClient(client5);
+            int ascii = 'a' + random.nextInt(15);
+            char character = (char)ascii;
+            job.setTitle(new StringBuilder().append(character).toString());
             job.setVisible(true);
             job.setBeginDate(getRandomDate(beginDateTable));
             job.setEndDate(getRandomDate(endDateTable));

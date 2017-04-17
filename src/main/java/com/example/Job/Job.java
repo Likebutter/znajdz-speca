@@ -17,6 +17,9 @@ public class Job {
     private int id;
 
     @NotNull
+    private String title;
+
+    @NotNull
     private Boolean visible;
 
     @ManyToOne
@@ -38,7 +41,8 @@ public class Job {
     public Job() {
     }
 
-    public Job(Date beginDate, Date endDate, Date addedAt, Boolean visible, String localization, Client client) {
+    public Job(String title, Date beginDate, Date endDate, Date addedAt, Boolean visible, String localization, Client client) {
+        this.title = title;
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.addedAt = addedAt;
@@ -47,7 +51,8 @@ public class Job {
         this.client = client;
     }
 
-    public Job(Date beginDate, Date endDate, Date addedAt, Boolean visible, String localization, Company company, Client client, String descript) {
+    public Job(String title, Date beginDate, Date endDate, Date addedAt, Boolean visible, String localization, Company company, Client client, String descript) {
+        this.title = title;
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.addedAt = addedAt;
@@ -59,10 +64,11 @@ public class Job {
     }
 
     public Job(JobRequest request) {
+        this.title = request.getTitle();
         this.beginDate = request.getBeginDate();
         this.endDate = request.getEndDate();
-        this.localization = request.getLocalization();
-        this.descript = request.getDescript();
+        this.localization = request.getLocation();
+        this.descript = request.getDescription();
     }
 
     public int getId() {
@@ -137,7 +143,13 @@ public class Job {
         this.descript = descript;
     }
 
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     @Override
     public String toString() {
