@@ -68,25 +68,10 @@ public class JobController {
             specializationRepository.save(new Specialization(tag, newJob));
         }
 
-        List<FileData> imagesData = new ArrayList<>();
-
         if((request.getImages() != null))
-            if(!request.getImages().isEmpty())
-            {
-                for(MultipartFile image : request.getImages()) {
+            if(!request.getImages().isEmpty()) {
 
-                    FileData data = new FileData();
-
-                    try {
-                        data.setContent(image.getBytes());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    data.setExtension(FilenameUtils.getExtension(image.getOriginalFilename()));
-                    imagesData.add(data);
-                }
-
+                List<FileData> imagesData = serializeUploadFiles(request.getImages());
                 ServerPhotoRequest photoRequest = new ServerPhotoRequest(imagesData, newJob);
                 photoDao.savePhotos(photoRequest);
             }
@@ -166,5 +151,26 @@ public class JobController {
         newJob.setClient(clientRepository.findById(request.getClientId()));
 
         return newJob;
+    }
+
+    private List<FileData> serializeUploadFiles(List<MultipartFile> files) {
+
+        List<FileData> imagesData = new ArrayList<>();
+
+        for(MultipartFile file : files) {
+
+            FileData data = new FileData();
+
+            try {
+                data.setContent(file.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            data.setExtension(FilenameUtils.getExtension(file.getOriginalFilename()));
+            imagesData.add(data);
+        }
+
+        return imagesData;
     }
 }
