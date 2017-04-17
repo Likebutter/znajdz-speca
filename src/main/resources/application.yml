@@ -1,0 +1,12 @@
+# config context path to "/" by setting an empty string
+server:
+  contextPath:
+
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIAJYL3KISVYWOSOFRA
+      secretKey: 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
+      region: us-east-1
+    s3:
+      bucket: pzprojektbucket
