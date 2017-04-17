@@ -1,5 +1,7 @@
 package com.example.Job;
 
+import com.amazonaws.services.s3.model.PutObjectResult;
+import com.example.AWS.S3Util;
 import com.example.Client.Client;
 import com.example.Client.ClientRepository;
 import com.example.Photo.*;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import javax.servlet.annotation.MultipartConfig;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -41,10 +44,13 @@ public class JobController {
     private SpecializationRepository specializationRepository;
 
     @Autowired
-    private PhotoDao photoDao;
+    private PhotoRepository photoRepository;
 
     @Autowired
-    private PhotoRepository photoRepository;
+    private S3Util s3util;
+
+    private Integer keyValue;
+    private String uploadPath;
 
     @PostMapping(value = "/job", consumes = "multipart/form-data")
     public ResponseEntity<JobResponse> addNewJob(@ModelAttribute JobRequest request) {
@@ -70,10 +76,7 @@ public class JobController {
 
         if((request.getImages() != null))
             if(!request.getImages().isEmpty()) {
-
-                List<FileData> imagesData = serializeUploadFiles(request.getImages());
-                ServerPhotoRequest photoRequest = new ServerPhotoRequest(imagesData, newJob);
-                photoDao.savePhotos(photoRequest);
+                uploadFiles(request.getImages(), newJob);
             }
 
         JobResponse response = new JobResponse(newJob, tags);
@@ -163,24 +166,28 @@ public class JobController {
         return newJob;
     }
 
-    private List<FileData> serializeUploadFiles(List<MultipartFile> files) {
-
-        List<FileData> imagesData = new ArrayList<>();
+    private void uploadFiles(List<MultipartFile> files, Job job) {
 
         for(MultipartFile file : files) {
+            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+            String uploadKey = "znajdzspeca/images/" + keyValue + "." + extension;
 
-            FileData data = new FileData();
+            PutObjectResult putObjectResult;
 
             try {
-                data.setContent(file.getBytes());
+                putObjectResult = s3util.upload(file, uploadKey);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            data.setExtension(FilenameUtils.getExtension(file.getOriginalFilename()));
-            imagesData.add(data);
+            Photo photo = new Photo(job, uploadPath + uploadKey);
+            photoRepository.save(photo);
+            keyValue++;
         }
+    }
 
-        return imagesData;
+    public JobController() {
+        keyValue = 101;
+        uploadPath = "https://s3-eu-west-1.amazonaws.com/pzprojektbucket/";
     }
 }

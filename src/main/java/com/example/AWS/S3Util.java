@@ -36,9 +36,9 @@ public class S3Util {
         return putObjectResult;
     }
 
-    public PutObjectResult upload(byte[] content, String uploadKey) throws IOException {
+    public PutObjectResult upload(MultipartFile file, String uploadKey) throws IOException {
         PutObjectResult putObjectResult = new PutObjectResult();
-        putObjectResult = upload(new ByteArrayInputStream(content), uploadKey);
+        putObjectResult = upload(file.getInputStream(), uploadKey);
         return putObjectResult;
     }
 
