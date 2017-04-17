@@ -2,7 +2,9 @@ package com.example.Job;
 
 import com.example.Client.Client;
 import com.example.Client.ClientRepository;
+import com.example.Photo.PhotoDao;
 import com.example.Photo.PhotoRepository;
+import com.example.Photo.ServerPhotoRequest;
 import com.example.Specialization.Specialization;
 import com.example.Specialization.SpecializationRepository;
 import com.example.Tag.Tag;
@@ -39,7 +41,7 @@ public class JobController {
     private SpecializationRepository specializationRepository;
 
     @Autowired
-    private PhotoRepository photoRepository;
+    private PhotoDao photoDao;
 
     @PostMapping(value = "/job", consumes = "multipart/form-data")
     public ResponseEntity<JobResponse> addNewJob(@ModelAttribute JobRequest request) {
@@ -62,6 +64,14 @@ public class JobController {
         for(Tag tag: tags) {
             specializationRepository.save(new Specialization(tag, newJob));
         }
+
+        if((request.getImages() != null))
+            if(!request.getImages().isEmpty())
+            {
+                ServerPhotoRequest photoRequest = new ServerPhotoRequest(request.getImages(), newJob);
+                photoDao.savePhotos(photoRequest);
+            }
+
         JobResponse response = new JobResponse(newJob, tags);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
