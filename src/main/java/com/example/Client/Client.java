@@ -1,8 +1,6 @@
 package com.example.Client;
 
 
-import lombok.Data;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
