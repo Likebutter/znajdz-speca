@@ -7,6 +7,7 @@ import java.io.Serializable;
 /**
  * Created by Paweł on 2017-04-16.
  */
+
 @Data
 public class JwtAuthenticationRequest implements Serializable {
 

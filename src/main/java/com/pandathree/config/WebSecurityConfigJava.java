@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfigJava extends WebSecurityConfigurerAdapter{
+public class WebSecurityConfigJava extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
@@ -62,7 +62,7 @@ public class WebSecurityConfigJava extends WebSecurityConfigurerAdapter{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
                 .authorizeRequests()
-                //.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 // allow anonymous resource requests
                 .antMatchers(
@@ -70,11 +70,11 @@ public class WebSecurityConfigJava extends WebSecurityConfigurerAdapter{
                         "/",
                         "/*.html",
                         "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js"
-                ).permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated();
+                       "/**/*.css",
+                       "/**/*.js"
+               ).permitAll()
+               .antMatchers("/auth/**").permitAll()
+               .anyRequest().authenticated();
 
         // Custom JWT based security filter
         httpSecurity

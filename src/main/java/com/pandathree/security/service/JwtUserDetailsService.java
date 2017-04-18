@@ -1,5 +1,6 @@
 package com.pandathree.security.service;
 
+import com.pandathree.logger.MyLogger;
 import com.pandathree.example.Client.Client;
 import com.pandathree.example.Client.ClientRepository;
 import com.pandathree.example.Company.Company;
@@ -13,8 +14,9 @@ import org.springframework.stereotype.Service;
 /**
  * Created by Paweł on 2017-04-16.
  */
+
 @Service
-public class JwtUserDetailsService implements UserDetailsService{
+public class JwtUserDetailsService implements UserDetailsService {
 
     @Autowired
     private ClientRepository clientRepository;
@@ -30,9 +32,12 @@ public class JwtUserDetailsService implements UserDetailsService{
         if(client == null && company == null)
             throw new UsernameNotFoundException("No user found with username: " + username);
 
-        else if(client == null)
+        else if(client == null){
+            MyLogger.log.info(this.getClass().getName() + " Creating new JwtCompany");
             return new JwtUser(company);
+        }
 
+        MyLogger.log.info(this.getClass().getName() + " Creating new JwtClient");
         return new JwtUser(client);
     }
 }

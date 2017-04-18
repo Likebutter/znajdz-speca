@@ -1,5 +1,6 @@
 package com.pandathree.security;
 
+import com.pandathree.logger.MyLogger;
 import com.pandathree.security.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import java.io.IOException;
 /**
  * Created by Paweł on 2017-04-15.
  */
+
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Value("${jwt.header}")
@@ -28,8 +30,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        MyLogger.log.info(this.getClass().getName() + " FILTERING");
+
         String authToken = request.getHeader(this.tokenHeader);
+        MyLogger.log.info(this.getClass().getName() + " FILTERING token header: " + request.getHeader(this.tokenHeader));
         String email = jwtTokenUtil.getEmailFromToken(authToken);
+        MyLogger.log.info(this.getClass().getName() + " FILTERING email from token: " + jwtTokenUtil.getEmailFromToken(authToken));
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             jwtUserDetailsService.loadUserByUsername(email);

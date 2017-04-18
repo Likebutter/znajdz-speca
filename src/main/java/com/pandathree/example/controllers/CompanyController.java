@@ -28,7 +28,7 @@ public class CompanyController {
     @Autowired
     private OpinionRepository opinionRepository;
 	
-	   @PostMapping("/company")
+    @PostMapping("/company")
     public ResponseEntity<Company> createCompany(@RequestBody Company company){
         if(companyRepository.exists(company.getId())){
             return new ResponseEntity<Company>(HttpStatus.BAD_REQUEST);

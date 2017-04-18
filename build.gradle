@@ -40,4 +40,5 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web-services')
 	runtime('org.postgresql:postgresql')
 	compile('io.jsonwebtoken:jjwt:0.2')
+	compile('log4j:log4j:1.2.14')
 }

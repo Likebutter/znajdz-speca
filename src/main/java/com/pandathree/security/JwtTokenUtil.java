@@ -15,8 +15,9 @@ import java.util.Map;
 /**
  * Created by Paweł on 2017-04-15.
  */
+
 @Component
-public class JwtTokenUtil implements Serializable{
+public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -3301605591108950415L;
 
@@ -62,7 +63,7 @@ public class JwtTokenUtil implements Serializable{
         return created;
     }
 
-    private Claims getClaimsFromToken(String token) {
+    public Claims getClaimsFromToken(String token) {
         Claims claims;
         try {
             claims = Jwts.parser()

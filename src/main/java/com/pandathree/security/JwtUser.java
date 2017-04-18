@@ -11,8 +11,9 @@ import java.util.Collection;
 /**
  * Created by Paweł on 2017-04-16.
  */
+
 @Data
-public class JwtUser implements UserDetails{
+public class JwtUser implements UserDetails {
 
     private Client client;
     private Company company;

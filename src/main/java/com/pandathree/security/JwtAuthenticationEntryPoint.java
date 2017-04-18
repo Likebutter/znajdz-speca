@@ -13,6 +13,7 @@ import java.io.Serializable;
 /**
  * Created by Paweł on 2017-04-15.
  */
+
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
 

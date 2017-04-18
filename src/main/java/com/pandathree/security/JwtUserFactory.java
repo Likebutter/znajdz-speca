@@ -6,6 +6,7 @@ import com.pandathree.example.Company.Company;
 /**
  * Created by Paweł on 2017-04-17.
  */
+
 public class JwtUserFactory {
 
     private JwtUserFactory(){};
