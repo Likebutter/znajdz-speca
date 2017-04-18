@@ -27,9 +27,9 @@ public class AWSConfiguration {
         return amazonS3Client;
     }
 
-    @Bean
-    Ec2MetadataRegionProvider ec2MetadataRegionProvider() {
-        return new Ec2MetadataRegionProvider();
-    }
+   // @Bean
+    //Ec2MetadataRegionProvider ec2MetadataRegionProvider() {
+       // return new Ec2MetadataRegionProvider();
+    //}
 
 }

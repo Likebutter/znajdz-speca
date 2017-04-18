@@ -1,6 +1,8 @@
 package com.example.Client;
 
 
+import lombok.Data;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -43,6 +45,7 @@ public class Client {
         this.email = email;
         this.password = password;
     }
+
 
     public int getId() {
         return id;
@@ -91,6 +94,7 @@ public class Client {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
 
     @Override
     public String toString() {
