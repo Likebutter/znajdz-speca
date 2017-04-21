@@ -89,7 +89,14 @@ public class JobController {
                 uploadFiles(request.getImages(), newJob);
             }
 
-        JobResponse response = new JobResponse(newJob, tags);
+        List<Photo> gallery = photoRepository.findAllByJob(newJob);
+        List<PhotoResponse> photos = new ArrayList<>();
+
+        for(Photo photo : gallery) {
+            photos.add(new PhotoResponse(photo));
+        }
+
+        JobResponse response = new JobResponse(newJob, tags, photos);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
