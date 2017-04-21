@@ -13,14 +13,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
-import javax.servlet.annotation.MultipartConfig;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;
@@ -84,9 +79,9 @@ public class JobController {
             }
         }
 
-        if((request.getImages() != null))
-            if(!request.getImages().isEmpty()) {
-                uploadFiles(request.getImages(), newJob);
+        if((request.getImage() != null))
+            if(!request.getImage().isEmpty()) {
+                uploadFiles(request.getImage(), newJob);
             }
 
         List<Photo> gallery = photoRepository.findAllByJob(newJob);
