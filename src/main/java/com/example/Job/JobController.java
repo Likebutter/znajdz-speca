@@ -79,9 +79,9 @@ public class JobController {
             }
         }
 
-        if((request.getImage() != null))
-            if(!request.getImage().isEmpty()) {
-                uploadFiles(request.getImage(), newJob);
+        if((request.getImages() != null))
+            if(!request.getImages().isEmpty()) {
+                uploadFiles(request.getImages(), newJob);
             }
 
         List<Photo> gallery = photoRepository.findAllByJob(newJob);
