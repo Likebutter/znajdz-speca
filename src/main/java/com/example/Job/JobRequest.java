@@ -14,7 +14,7 @@ public class JobRequest {
     private String location;
     private String description;
     private List<String> specializations;
-    private List<MultipartFile> images;
+    private List<MultipartFile> Image;
     private Date beginDateC;
     private Date endDateC;
     //TODO: po dodaniu tokenów usunać pole clientId w JobRequest i dodać sprawdzanie użytkownika po tokenie w kontrolerze
@@ -80,12 +80,12 @@ public class JobRequest {
         this.specializations = specializations;
     }
 
-    public List<MultipartFile> getImages() {
-        return images;
+    public List<MultipartFile> getImage() {
+        return Image;
     }
 
-    public void setImages(List<MultipartFile> images) {
-        this.images = images;
+    public void setImage(List<MultipartFile> image) {
+        this.Image = image;
     }
 
     public Integer getClientId() {
