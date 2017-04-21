@@ -52,7 +52,7 @@ public class JobController {
     private Integer keyValue;
     private String uploadPath;
 
-    @PostMapping(value = "/job", consumes = "multipart/form-data")
+    @PostMapping(value = "/job", consumes = "multipart/form-data", produces = "application/json")
     public ResponseEntity<JobResponse> addNewJob(@ModelAttribute JobRequest request) {
 
         request.setClientId(1 + new Random().nextInt(5));
