@@ -48,6 +48,21 @@ public class Photo {
         this.photoURL = photoURL;
     }
 
+    public Photo(Job job, String photoURL) {
+        this.job = job;
+        this.photoURL = photoURL;
+    }
+
+    public Photo(Opinion opinion, String photoURL) {
+        this.opinion = opinion;
+        this.photoURL = photoURL;
+    }
+
+    public Photo(Company company, String photoURL) {
+        this.company = company;
+        this.photoURL = photoURL;
+    }
+
     public int getId() {
         return id;
     }
