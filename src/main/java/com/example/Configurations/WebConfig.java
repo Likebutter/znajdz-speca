@@ -10,11 +10,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableWebMvc
 public class WebConfig extends WebMvcConfigurerAdapter {
 
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("https://znajdz-speca.herokuapp.com","http://localhost:4200")
                 .allowedMethods("PUT", "DELETE", "GET", "POST");
     }
+
 
 }

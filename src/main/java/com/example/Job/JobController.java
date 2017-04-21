@@ -68,10 +68,14 @@ public class JobController {
 
         Job newJob = generateJobObject(request);
         jobRepository.save(newJob);
-        List<Tag> tags = tagRepository.findByNameIn(request.getSpecializations());
+        List<Tag> tags = null;
 
-        for(Tag tag: tags) {
-            specializationRepository.save(new Specialization(tag, newJob));
+        if(request.getSpecializations() != null) {
+            tags = tagRepository.findByNameIn(request.getSpecializations());
+
+            for (Tag tag : tags) {
+                specializationRepository.save(new Specialization(tag, newJob));
+            }
         }
 
         if((request.getImages() != null))
@@ -145,11 +149,8 @@ public class JobController {
 
     private Boolean checkIfCorrectRequest(JobRequest job) {
 
-        if(job.getBeginDate() == null) return false;
-        if(job.getEndDate() == null) return false;
-        if(job.getLocation() == null) return false;
         if((job.getSpecializations() == null) || (job.getSpecializations().isEmpty())) return false;
-        //if(job.getClientId() == null) return false;
+        if(job.getTitle() == null) return false;
 
         return true;
     }
