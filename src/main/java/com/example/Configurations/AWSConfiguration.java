@@ -4,7 +4,6 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.aws.core.region.Ec2MetadataRegionProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,9 +26,9 @@ public class AWSConfiguration {
         return amazonS3Client;
     }
 
-    @Bean
-    Ec2MetadataRegionProvider ec2MetadataRegionProvider() {
-        return new Ec2MetadataRegionProvider();
-    }
+   // @Bean
+    //Ec2MetadataRegionProvider ec2MetadataRegionProvider() {
+       // return new Ec2MetadataRegionProvider();
+    //}
 
 }

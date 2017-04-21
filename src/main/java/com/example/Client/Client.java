@@ -44,6 +44,7 @@ public class Client {
         this.password = password;
     }
 
+
     public int getId() {
         return id;
     }
@@ -91,6 +92,7 @@ public class Client {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
 
     @Override
     public String toString() {
