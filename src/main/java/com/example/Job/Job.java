@@ -65,8 +65,8 @@ public class Job {
 
     public Job(JobRequest request) {
         this.title = request.getTitle();
-        this.beginDate = request.getBeginDate();
-        this.endDate = request.getEndDate();
+        this.beginDate = request.getBeginDateC();
+        this.endDate = request.getEndDateC();
         this.localization = request.getLocation();
         this.descript = request.getDescription();
     }
