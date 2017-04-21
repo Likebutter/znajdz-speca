@@ -23,6 +23,8 @@ import javax.servlet.annotation.MultipartConfig;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -51,6 +53,7 @@ public class JobController {
 
     private Integer keyValue;
     private String uploadPath;
+    private SimpleDateFormat dateFormat;
 
     @PostMapping(value = "/job", consumes = "multipart/form-data", produces = "application/json")
     public ResponseEntity<JobResponse> addNewJob(@ModelAttribute JobRequest request) {
@@ -60,6 +63,9 @@ public class JobController {
 
         if(!correct)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(!convertDates(request))
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         //TODO: po wprowadzeniu tokenów dodać sprawdzanie po tokenie, czy taki użytkownik jest w bazie
         Client checkedClient = clientRepository.findById(request.getClientId());
@@ -187,8 +193,45 @@ public class JobController {
         }
     }
 
+    private Boolean convertDates(JobRequest request) {
+
+        if(request.getBeginDate() != null) {
+            if (!request.getBeginDate().equals("null")) {
+                Date date;
+
+                try {
+                    date = new Date(dateFormat.parse(request.getBeginDate()).getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+                request.setBeginDateC(date);
+            }
+        }
+
+        if(request.getEndDate() != null) {
+            if (!request.getEndDate().equals("null")) {
+                Date date;
+
+                try {
+                    date = new Date(dateFormat.parse(request.getEndDate()).getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+                request.setEndDateC(date);
+            }
+        }
+
+        return true;
+    }
+
     public JobController() {
         keyValue = 101;
         uploadPath = "https://s3-eu-west-1.amazonaws.com/pzprojektbucket/";
+        dateFormat = new SimpleDateFormat("yyyy-mm-dd");
     }
+
 }
