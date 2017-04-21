@@ -149,7 +149,7 @@ public class JobController {
 
     private Boolean checkIfCorrectRequest(JobRequest job) {
 
-        if((job.getSpecializations() == null) || (job.getSpecializations().isEmpty())) return false;
+        if(job.getLocation() == null) return false;
         if(job.getTitle() == null) return false;
 
         return true;
