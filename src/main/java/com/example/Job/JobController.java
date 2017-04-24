@@ -1,5 +1,6 @@
 package com.example.Job;
 
+import com.amazonaws.Response;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.example.AWS.S3Util;
 import com.example.Client.Client;
@@ -96,7 +97,38 @@ public class JobController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping(value = "job/{id}")
+    @GetMapping(value = "/jobs")
+    public ResponseEntity<List<JobResponse>> getAllJobs() {
+
+        List<Job> jobs = jobRepository.findAll();
+        List<JobResponse> response = new ArrayList<>();
+        List<Tag> tags;
+        List<Specialization> specs;
+        List<Photo> photosList;
+        List<PhotoResponse> photos;
+
+        for(Job job : jobs) {
+            specs = specializationRepository.findAllByJob(job);
+            tags = new ArrayList<>();
+
+            for(Specialization spec : specs) {
+                tags.add(spec.getTag());
+            }
+
+            photosList = photoRepository.findAllByJob(job);
+            photos = new ArrayList<>();
+
+            for(Photo photo : photosList) {
+                photos.add(new PhotoResponse(photo));
+            }
+
+            response.add(new JobResponse(job, tags, photos));
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/job/{id}")
     public ResponseEntity<JobResponse> getJob(@PathVariable Integer id) {
 
         Job job = jobRepository.findOne(id);
@@ -124,7 +156,7 @@ public class JobController {
     }
 
     //TODO: Po dodaniu tokenów zakodować sprawdzanie, czy Job należy do klienta określonego przez token
-    @DeleteMapping(value = "job/{id}")
+    @DeleteMapping(value = "/job/{id}")
     public ResponseEntity<JobResponse> deleteJob(@PathVariable Integer id) {
 
         Job job = jobRepository.findOne(id);
