@@ -1,5 +1,6 @@
 package com.example.Job;
 
+import com.amazonaws.Response;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.example.AWS.S3Util;
 import com.example.Client.Client;
@@ -13,16 +14,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
-import javax.servlet.annotation.MultipartConfig;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -51,8 +49,9 @@ public class JobController {
 
     private Integer keyValue;
     private String uploadPath;
+    private SimpleDateFormat dateFormat;
 
-    @PostMapping(value = "/job", consumes = "multipart/form-data")
+    @PostMapping(value = "/job", consumes = "multipart/form-data", produces = "application/json")
     public ResponseEntity<JobResponse> addNewJob(@ModelAttribute JobRequest request) {
 
         request.setClientId(1 + new Random().nextInt(5));
@@ -61,6 +60,9 @@ public class JobController {
         if(!correct)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        if(!convertDates(request))
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
         //TODO: po wprowadzeniu tokenów dodać sprawdzanie po tokenie, czy taki użytkownik jest w bazie
         Client checkedClient = clientRepository.findById(request.getClientId());
         if(checkedClient == null)
@@ -68,10 +70,14 @@ public class JobController {
 
         Job newJob = generateJobObject(request);
         jobRepository.save(newJob);
-        List<Tag> tags = tagRepository.findByNameIn(request.getSpecializations());
+        List<Tag> tags = null;
 
-        for(Tag tag: tags) {
-            specializationRepository.save(new Specialization(tag, newJob));
+        if(request.getSpecializations() != null) {
+            tags = tagRepository.findByNameIn(request.getSpecializations());
+
+            for (Tag tag : tags) {
+                specializationRepository.save(new Specialization(tag, newJob));
+            }
         }
 
         if((request.getImages() != null))
@@ -79,12 +85,50 @@ public class JobController {
                 uploadFiles(request.getImages(), newJob);
             }
 
-        JobResponse response = new JobResponse(newJob, tags);
+        List<Photo> gallery = photoRepository.findAllByJob(newJob);
+        List<PhotoResponse> photos = new ArrayList<>();
+
+        for(Photo photo : gallery) {
+            photos.add(new PhotoResponse(photo));
+        }
+
+        JobResponse response = new JobResponse(newJob, tags, photos);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping(value = "job/{id}")
+    @GetMapping(value = "/jobs")
+    public ResponseEntity<List<JobResponse>> getAllJobs() {
+
+        List<Job> jobs = jobRepository.findAll();
+        List<JobResponse> response = new ArrayList<>();
+        List<Tag> tags;
+        List<Specialization> specs;
+        List<Photo> photosList;
+        List<PhotoResponse> photos;
+
+        for(Job job : jobs) {
+            specs = specializationRepository.findAllByJob(job);
+            tags = new ArrayList<>();
+
+            for(Specialization spec : specs) {
+                tags.add(spec.getTag());
+            }
+
+            photosList = photoRepository.findAllByJob(job);
+            photos = new ArrayList<>();
+
+            for(Photo photo : photosList) {
+                photos.add(new PhotoResponse(photo));
+            }
+
+            response.add(new JobResponse(job, tags, photos));
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/job/{id}")
     public ResponseEntity<JobResponse> getJob(@PathVariable Integer id) {
 
         Job job = jobRepository.findOne(id);
@@ -112,7 +156,7 @@ public class JobController {
     }
 
     //TODO: Po dodaniu tokenów zakodować sprawdzanie, czy Job należy do klienta określonego przez token
-    @DeleteMapping(value = "job/{id}")
+    @DeleteMapping(value = "/job/{id}")
     public ResponseEntity<JobResponse> deleteJob(@PathVariable Integer id) {
 
         Job job = jobRepository.findOne(id);
@@ -145,11 +189,8 @@ public class JobController {
 
     private Boolean checkIfCorrectRequest(JobRequest job) {
 
-        if(job.getBeginDate() == null) return false;
-        if(job.getEndDate() == null) return false;
         if(job.getLocation() == null) return false;
-        if((job.getSpecializations() == null) || (job.getSpecializations().isEmpty())) return false;
-        //if(job.getClientId() == null) return false;
+        if(job.getTitle() == null) return false;
 
         return true;
     }
@@ -186,8 +227,45 @@ public class JobController {
         }
     }
 
+    private Boolean convertDates(JobRequest request) {
+
+        if(request.getBeginDate() != null) {
+            if (!request.getBeginDate().equals("null")) {
+                Date date;
+
+                try {
+                    date = new Date(dateFormat.parse(request.getBeginDate()).getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+                request.setBeginDateC(date);
+            }
+        }
+
+        if(request.getEndDate() != null) {
+            if (!request.getEndDate().equals("null")) {
+                Date date;
+
+                try {
+                    date = new Date(dateFormat.parse(request.getEndDate()).getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+                request.setEndDateC(date);
+            }
+        }
+
+        return true;
+    }
+
     public JobController() {
         keyValue = 101;
         uploadPath = "https://s3-eu-west-1.amazonaws.com/pzprojektbucket/";
+        dateFormat = new SimpleDateFormat("yyyy-mm-dd");
     }
+
 }

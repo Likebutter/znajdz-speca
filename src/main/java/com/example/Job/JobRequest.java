@@ -9,19 +9,21 @@ import java.util.List;
 public class JobRequest {
 
     private String title;
-    private Date beginDate;
-    private Date endDate;
+    private String beginDate;
+    private String endDate;
     private String location;
     private String description;
     private List<String> specializations;
     private List<MultipartFile> images;
+    private Date beginDateC;
+    private Date endDateC;
     //TODO: po dodaniu tokenów usunać pole clientId w JobRequest i dodać sprawdzanie użytkownika po tokenie w kontrolerze
     private Integer clientId;
 
     public JobRequest() {
     }
 
-    public JobRequest(String title, Date beginDate, Date endDate, String localization, String descript, List<String> specializations) {
+    public JobRequest(String title, String beginDate, String endDate, String localization, String descript, List<String> specializations) {
         this.title = title;
         this.beginDate = beginDate;
         this.endDate = endDate;
@@ -38,19 +40,19 @@ public class JobRequest {
         this.title = title;
     }
 
-    public Date getBeginDate() {
+    public String getBeginDate() {
         return beginDate;
     }
 
-    public void setBeginDate(Date beginDate) {
+    public void setBeginDate(String beginDate) {
         this.beginDate = beginDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
@@ -92,5 +94,21 @@ public class JobRequest {
 
     public void setClientId(Integer clientId) {
         this.clientId = clientId;
+    }
+
+    public Date getBeginDateC() {
+        return beginDateC;
+    }
+
+    public void setBeginDateC(Date beginDateC) {
+        this.beginDateC = beginDateC;
+    }
+
+    public Date getEndDateC() {
+        return endDateC;
+    }
+
+    public void setEndDateC(Date endDateC) {
+        this.endDateC = endDateC;
     }
 }
