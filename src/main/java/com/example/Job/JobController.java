@@ -230,8 +230,9 @@ public class JobController {
     private Boolean convertDates(JobRequest request) {
 
         if(request.getBeginDate() != null) {
+            
+            Date date;
             if (!request.getBeginDate().equals("null")) {
-                Date date;
 
                 try {
                     date = new Date(dateFormat.parse(request.getBeginDate()).getTime());
@@ -241,8 +242,8 @@ public class JobController {
                 }
             }
             else {
-                Date date = new Date(Calendar.getInstance().getTime().getTime());
-            }
+                date = new Date(Calendar.getInstance().getTime().getTime());
+            } 
             
             request.setBeginDateC(date);
         }
