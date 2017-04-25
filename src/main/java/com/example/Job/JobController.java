@@ -239,9 +239,12 @@ public class JobController {
                     e.printStackTrace();
                     return false;
                 }
-
-                request.setBeginDateC(date);
             }
+            else {
+                Date date = new Date(Calendar.getInstance().getTime().getTime());
+            }
+            
+            request.setBeginDateC(date);
         }
 
         if(request.getEndDate() != null) {
