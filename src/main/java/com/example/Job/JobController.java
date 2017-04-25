@@ -265,7 +265,7 @@ public class JobController {
     public JobController() {
         keyValue = 101;
         uploadPath = "https://s3-eu-west-1.amazonaws.com/pzprojektbucket/";
-        dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     }
 
 }
