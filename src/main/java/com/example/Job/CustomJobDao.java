@@ -84,11 +84,11 @@ public class CustomJobDao {
             builder.append("WHERE ");
 
         if(request.getBeginDate() != null) {
-            builder.append("(begin_date > '" + request.getBeginDate() + "') ");
+            builder.append("(begin_date >= '" + request.getBeginDate() + "') ");
 
         }
         else {
-            builder.append("(begin_date > '" + new Date(Calendar.getInstance().getTime().getTime()) + "') ");
+            builder.append("(begin_date >= '" + new Date(Calendar.getInstance().getTime().getTime()) + "') ");
         }
 
         if( request.getEndDate() != null) {
