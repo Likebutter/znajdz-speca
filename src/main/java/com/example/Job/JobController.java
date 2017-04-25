@@ -249,8 +249,9 @@ public class JobController {
         }
 
         if(request.getEndDate() != null) {
+            
+            Date date;
             if (!request.getEndDate().equals("null")) {
-                Date date;
 
                 try {
                     date = new Date(dateFormat.parse(request.getEndDate()).getTime());
@@ -258,9 +259,15 @@ public class JobController {
                     e.printStackTrace();
                     return false;
                 }
-
-                request.setEndDateC(date);
             }
+            else {
+                
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DAY_OF_YEAR, 14);
+                date = new Date(calendar.getTime().getTime());
+            }
+            
+            request.setEndDateC(date);
         }
 
         return true;
