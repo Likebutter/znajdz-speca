@@ -15,4 +15,6 @@ public interface JobRepository extends CrudRepository<Job, Integer>{
 
     List<Job> findByCompany(Company company);
 
+    List<Job> findAllByCompany(Company company);
+
 }
