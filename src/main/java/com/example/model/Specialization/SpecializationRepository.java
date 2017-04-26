@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface SpecializationRepository extends CrudRepository<Specialization, Integer>{
+
     List<Specialization> findAllByJob(Job job);
 
     List<Specialization> findAllByJobIn(List<Job> job);

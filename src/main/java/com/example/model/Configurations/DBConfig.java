@@ -1,8 +1,14 @@
 package com.example.model.Configurations;
 
 
-public class DBConfig {
-    public static void main(String[] args) {
+import com.example.model.Job.CustomJobDao;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-    }
+@Configuration
+public class DBConfig {
+
+    @Bean
+    public CustomJobDao customJobDao() {return new CustomJobDao();}
+
 }

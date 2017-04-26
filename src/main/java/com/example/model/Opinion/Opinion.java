@@ -1,14 +1,13 @@
 package com.example.model.Opinion;
 
 import com.example.model.Job.Job;
-import lombok.Data;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Data
 public class Opinion {
 
     @Id
@@ -27,7 +26,8 @@ public class Opinion {
     private String text;
     private int rate;
 
-    public Opinion(){}
+    public Opinion() {
+    }
 
     public Opinion(Date date, Job job) {
         this.date = date;
@@ -39,5 +39,56 @@ public class Opinion {
         this.date = date;
         this.job = job;
         this.text = text;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Job getJob() {
+        return job;
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return "Opinion{" +
+                "id=" + id +
+                ", rate=" + rate +
+                ", date=" + date +
+                ", job=" + job +
+                ", text='" + text + '\'' +
+                '}';
     }
 }

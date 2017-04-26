@@ -1,14 +1,13 @@
 package com.example.model.Company;
 
-
 import com.example.model.Job.Job;
 import com.example.model.Job.JobRepository;
-import com.example.model.Opinion.Opinion;
-import com.example.model.Opinion.OpinionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.model.Opinion.Opinion;
+import com.example.model.Opinion.OpinionRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +25,11 @@ public class CompanyController {
     @Autowired
     private OpinionRepository opinionRepository;
 	
-    @PostMapping("/company")
+	   @PostMapping("/company")
     public ResponseEntity<Company> createCompany(@RequestBody Company company){
-        if(!checkIfCorrectRequest(company))
+        if(companyRepository.exists(company.getId())){
             return new ResponseEntity<Company>(HttpStatus.BAD_REQUEST);
-
-        if(companyRepository.exists(company.getId()))
-            return new ResponseEntity<Company>(HttpStatus.BAD_REQUEST);
-
+        }
             companyRepository.save(company);
         return new ResponseEntity<Company>(company, HttpStatus.OK);
     }
@@ -49,8 +45,6 @@ public class CompanyController {
 
     @PutMapping("/company/{id}")
     public ResponseEntity<Company> editCompanyById(@PathVariable Integer id, @RequestBody Company company){
-        if(!checkIfCorrectRequest(company))
-            return new ResponseEntity<Company>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<Company>(companyRepository.save(company), HttpStatus.OK);
     }
 
@@ -70,16 +64,5 @@ public class CompanyController {
         for(Job job : jobs)
             opinions.add(opinionRepository.findByJob(job));
         return new ResponseEntity<List<Opinion>>(opinions, HttpStatus.OK);
-    }
-
-    private Boolean checkIfCorrectRequest(Company company) {
-
-        if(company.getEmail() == null)   return false;
-        if(company.getName() == null)    return false;
-        if(company.getLocalization() == null)    return false;
-        if(company.getPassword() == null)    return false;
-        if(company.getAreaRange() == null) return false;
-
-        return true;
     }
 }

@@ -1,8 +1,6 @@
 package com.example.model.Client;
 
 
-import com.example.Client.Client;
-
 public class ClientResponse {
 
     private Integer id;

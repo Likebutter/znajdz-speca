@@ -3,13 +3,12 @@ package com.example.model.Photo;
 import com.example.model.Company.Company;
 import com.example.model.Job.Job;
 import com.example.model.Opinion.Opinion;
-import lombok.Data;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Data
 public class Photo {
 
     @Id
@@ -35,7 +34,8 @@ public class Photo {
     @NotNull
     private String photoURL;
 
-    public Photo(){}
+    public Photo() {
+    }
 
     public Photo(String photoURL) {
         this.photoURL = photoURL;
@@ -48,4 +48,69 @@ public class Photo {
         this.photoURL = photoURL;
     }
 
+    public Photo(Job job, String photoURL) {
+        this.job = job;
+        this.photoURL = photoURL;
+    }
+
+    public Photo(Opinion opinion, String photoURL) {
+        this.opinion = opinion;
+        this.photoURL = photoURL;
+    }
+
+    public Photo(Company company, String photoURL) {
+        this.company = company;
+        this.photoURL = photoURL;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Job getJob() {
+        return job;
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
+    }
+
+    public Opinion getOpinion() {
+        return opinion;
+    }
+
+    public void setOpinion(Opinion opinion) {
+        this.opinion = opinion;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
+    @Override
+    public String toString() {
+        return "Photo{" +
+                "id=" + id +
+                ", job=" + job +
+                ", opinion=" + opinion +
+                ", company=" + company +
+                ", photoURL='" + photoURL + '\'' +
+                '}';
+    }
 }

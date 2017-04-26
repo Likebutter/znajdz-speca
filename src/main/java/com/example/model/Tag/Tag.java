@@ -1,12 +1,10 @@
 package com.example.model.Tag;
 
-import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Data
 public class Tag {
 
     @Id
@@ -17,10 +15,34 @@ public class Tag {
     @NotNull
     private String name;
 
-    public Tag(){}
+    public Tag() {
+    }
 
     public Tag(String name) {
         this.name = name;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
