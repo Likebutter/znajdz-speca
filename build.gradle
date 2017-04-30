@@ -17,12 +17,23 @@ apply plugin: 'org.springframework.boot'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
+jar {
+	baseName = 'boot-gradle'
+	version = '0.0.1-SNAPSHOT'
+}
+
 repositories {
 	mavenCentral()
 }
 
 
 dependencies {
+	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.projectlombok:lombok:1.16.16')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	runtime('org.postgresql:postgresql')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile('org.apache.tomcat.embed:tomcat-embed-jasper','javax.servlet:jstl')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-data-rest')
 	compile('org.springframework.boot:spring-boot-starter-validation')
@@ -37,5 +48,6 @@ dependencies {
     compile group: 'net.minidev', name: 'json-smart', version: '2.3'
     compile group: 'net.minidev', name: 'asm', version: '1.0.2'
 	runtime('org.postgresql:postgresql')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile('io.jsonwebtoken:jjwt:0.2')
+	compile('log4j:log4j:1.2.14')
 }
