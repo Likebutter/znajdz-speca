@@ -12,24 +12,17 @@ public class SearchJobRequest {
     private List<String> tags;
     private String origin;
     private Integer areaRange;
-    private String sortedBy;
-    private String order;
-    //TODO: po wprowadzeniu tokenów usunąć companyId - przed tym: potrzebne do użytku testowego
-    private Integer companyId;
 
     public SearchJobRequest() {
     }
 
-    public SearchJobRequest(Date beginDate, Date endDate, String localization, List<String> tags, String origin, Integer areaRange, String sortedBy, String order, Integer companyId) {
+    public SearchJobRequest(Date beginDate, Date endDate, String localization, List<String> tags, String origin, Integer areaRange) {
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.localization = localization;
         this.tags = tags;
         this.origin = origin;
         this.areaRange = areaRange;
-        this.sortedBy = sortedBy;
-        this.order = order;
-        this.companyId = companyId;
     }
 
     public Date getBeginDate() {
@@ -78,29 +71,5 @@ public class SearchJobRequest {
 
     public void setAreaRange(Integer areaRange) {
         this.areaRange = areaRange;
-    }
-
-    public Integer getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getSortedBy() {
-        return sortedBy;
-    }
-
-    public void setSortedBy(String sortedBy) {
-        this.sortedBy = sortedBy;
-    }
-
-    public String getOrder() {
-        return order;
-    }
-
-    public void setOrder(String order) {
-        this.order = order;
     }
 }
