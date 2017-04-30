@@ -8,7 +8,7 @@ public class CompanyResponse {
     private String email;
     private String localization;
     private String phone;
-    private String descript;
+    private String description;
     private float avgRating;
     private int numberJobs;
     private int numberOpinions;
@@ -22,7 +22,7 @@ public class CompanyResponse {
         this.email = email;
         this.localization = localization;
         this.phone = phone;
-        this.descript = descript;
+        this.description = descript;
         this.avgRating = avgRating;
         this.numberJobs = numberJobs;
         this.numberOpinions = numberOpinions;
@@ -34,7 +34,7 @@ public class CompanyResponse {
         email = company.getEmail();
         localization = company.getLocalization();
         phone = company.getPhoneNumber();
-        descript = company.getDescript();
+        description = company.getDescription();
         avgRating = company.getAvgRating();
         numberJobs = company.getNumberJobs();
         numberOpinions = company.getNumberOpinions();
@@ -80,12 +80,12 @@ public class CompanyResponse {
         this.phone = phone;
     }
 
-    public String getDescript() {
-        return descript;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescript(String descript) {
-        this.descript = descript;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public float getAvgRating() {
@@ -120,7 +120,7 @@ public class CompanyResponse {
                 ", email='" + email + '\'' +
                 ", localization='" + localization + '\'' +
                 ", phone='" + phone + '\'' +
-                ", descript='" + descript + '\'' +
+                ", description='" + description + '\'' +
                 ", avgRating=" + avgRating +
                 ", numberJobs=" + numberJobs +
                 ", numberOpinions=" + numberOpinions +

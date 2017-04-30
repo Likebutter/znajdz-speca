@@ -188,7 +188,7 @@ public class JobController {
 
     private Boolean checkIfCorrectRequest(JobRequest job) {
 
-        if(job.getLocation() == null) return false;
+        if(job.getLocalization() == null) return false;
         if(job.getTitle() == null) return false;
 
         return true;

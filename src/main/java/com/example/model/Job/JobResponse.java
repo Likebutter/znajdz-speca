@@ -19,7 +19,7 @@ public class JobResponse {
     private Date endDate;
     private Date addedAt;
     private String localization;
-    private String descript;
+    private String description;
     private ClientResponse client;
     private CompanyResponse company;
     private List<Tag> tags;
@@ -35,7 +35,7 @@ public class JobResponse {
         this.endDate = endDate;
         this.addedAt = addedAt;
         this.localization = localization;
-        this.descript = descript;
+        this.description = descript;
         this.client = new ClientResponse(client);
         this.tags = tags;
 
@@ -50,7 +50,7 @@ public class JobResponse {
         this.endDate = job.getEndDate();
         this.addedAt = job.getAddedAt();
         this.localization = job.getLocalization();
-        this.descript = job.getDescript();
+        this.description = job.getDescription();
         this.client = new ClientResponse(job.getClient());
         this.tags = tags;
 
@@ -111,12 +111,12 @@ public class JobResponse {
         this.localization = localization;
     }
 
-    public String getDescript() {
-        return descript;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescript(String descript) {
-        this.descript = descript;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public ClientResponse getClient() {
@@ -159,7 +159,7 @@ public class JobResponse {
                 ", endDate=" + endDate +
                 ", addedAt=" + addedAt +
                 ", localization='" + localization + '\'' +
-                ", descript='" + descript + '\'' +
+                ", description='" + description + '\'' +
                 ", client=" + client +
                 ", company=" + company +
                 '}';

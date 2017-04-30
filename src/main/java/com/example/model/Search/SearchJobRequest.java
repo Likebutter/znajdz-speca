@@ -8,7 +8,7 @@ public class SearchJobRequest {
 
     private Date beginDate;
     private Date endDate;
-    private List<String> localizations;
+    private String localization;
     private List<String> tags;
     private String origin;
     private Integer areaRange;
@@ -20,10 +20,10 @@ public class SearchJobRequest {
     public SearchJobRequest() {
     }
 
-    public SearchJobRequest(Date beginDate, Date endDate, List<String> localizations, List<String> tags, String origin, Integer areaRange, String sortedBy, String order, Integer companyId) {
+    public SearchJobRequest(Date beginDate, Date endDate, String localization, List<String> tags, String origin, Integer areaRange, String sortedBy, String order, Integer companyId) {
         this.beginDate = beginDate;
         this.endDate = endDate;
-        this.localizations = localizations;
+        this.localization = localization;
         this.tags = tags;
         this.origin = origin;
         this.areaRange = areaRange;
@@ -48,12 +48,12 @@ public class SearchJobRequest {
         this.endDate = endDate;
     }
 
-    public List<String> getLocalizations() {
-        return localizations;
+    public String getLocalization() {
+        return localization;
     }
 
-    public void setLocalizations(List<String> localizations) {
-        this.localizations = localizations;
+    public void setLocalization(String localization) {
+        this.localization = localization;
     }
 
     public List<String> getTags() {
