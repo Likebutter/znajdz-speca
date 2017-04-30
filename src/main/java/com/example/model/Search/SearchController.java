@@ -49,6 +49,7 @@ public class SearchController {
     public ResponseEntity<List<JobResponse>> searchForJobs(@RequestBody SearchJobRequest request) {
 
         List<Job> foundJobs = customJobDao.buildAndExecuteSqlQuery(request);
+        List<Job> selectedJobs = null;
         List<JobResponse> response;
 
         if(foundJobs == null)
@@ -57,42 +58,37 @@ public class SearchController {
         if(foundJobs.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-        //TODO: rozpoznawanie typu użytkownika po tokenie, jeśli firma - wyliczenie odległości za pomoca GoogleMaps; jeśli nie firma - odpowiedź bez wyliczenia
+        if(request.getLocalization() != null) {
+            if(!request.getLocalization().isEmpty()) {
 
-        if(request.getCompanyId() == null)
-            response = generateJobResponse(foundJobs);
-        else {
+                String origin = request.getLocalization();
+                Integer searchRange;
 
-            Company company = companyRepository.findOne(request.getCompanyId());
-            String origin;
-            Integer searchRange;
+                String[] destinations = generateDestinationsArray(foundJobs);
+                DistanceMatrix googleMapsResponse = callGoogleMaps(origin, destinations);
 
-            if(request.getOrigin() == null)
-                origin = company.getLocalization();
-            else
-                origin = request.getOrigin();
+                if (googleMapsResponse == null) {
+                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
 
-            String[] destinations = generateDestinationsArray(foundJobs);
-            DistanceMatrix googleMapsResponse = callGoogleMaps(origin, destinations);
+                if (request.getAreaRange() == null)
+                    searchRange = defaultRange * 1000;
+                else
+                    searchRange = request.getAreaRange() * 1000;
 
-            if(googleMapsResponse == null) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                selectedJobs = new ArrayList<>();
+
+                for (int i = 0; i < foundJobs.size(); i++) {
+                    if (googleMapsResponse.rows[0].elements[i].distance.inMeters <= searchRange)
+                        selectedJobs.add(foundJobs.get(i));
+                }
             }
-
-            if(request.getAreaRange() == null)
-                searchRange = defaultRange*1000;
-            else
-                searchRange = request.getAreaRange()*1000;
-
-            List<Job> selectedJobs = new ArrayList<>();
-
-            for(int i = 0; i < foundJobs.size(); i++) {
-                if(googleMapsResponse.rows[0].elements[i].distance.inMeters <= searchRange)
-                    selectedJobs.add(foundJobs.get(i));
-            }
-
-            response = generateJobResponse(selectedJobs);
         }
+        else {
+            selectedJobs = foundJobs;
+        }
+
+        response = generateJobResponse(selectedJobs);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

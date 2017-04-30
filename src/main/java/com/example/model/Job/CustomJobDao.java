@@ -20,7 +20,6 @@ public class CustomJobDao {
         mappedNames = new HashMap<>();
         mappedNames.put("beginDate", "begin_date");
         mappedNames.put("endDate", "end_date");
-        mappedNames.put("localization", "localization");
     }
 
     public String buildSqlQuery(SearchJobRequest request) {
@@ -38,21 +37,7 @@ public class CustomJobDao {
         if(!dateCondition.isEmpty())
             stringBuilder.append(dateCondition);
 
-        String localizationCondition = checkForLocalization(request);
-        if(!localizationCondition.isEmpty())
-            stringBuilder.append(localizationCondition);
-
         stringBuilder.append("AND (visible = true) ");
-
-        if(request.getSortedBy() == null)
-            stringBuilder.append("ORDER BY begin_date ");
-        else
-            stringBuilder.append("ORDER BY " + mappedNames.get(request.getSortedBy()) + " ");
-
-        if(request.getOrder() == null)
-            stringBuilder.append("ASC");
-        else
-            stringBuilder.append(request.getOrder());
 
         return stringBuilder.toString();
 
@@ -97,41 +82,26 @@ public class CustomJobDao {
         return builder.toString();
     }
 
-    private String checkForLocalization(SearchJobRequest request) {
-
-        StringBuilder builder = new StringBuilder();
-
-        if(request.getLocalization() != null) {
-            if(!request.getLocalization().isEmpty()) {
-
-                builder.append("AND (localization IN (");
-                String localization = request.getLocalization();
-
-                builder.append(localization + ")) ");
-            }
-        }
-
-        return builder.toString();
-    }
-
     private String checkForTags(SearchJobRequest request) {
 
         StringBuilder builder = new StringBuilder();
 
         if(request.getTags() != null) {
-            builder.append("JOIN specialization ON job.id = specialization.job_id WHERE specialization.job_id IN (");
-            List<String> tags = request.getTags();
+            if(!request.getTags().isEmpty()) {
+                builder.append("JOIN specialization ON job.id = specialization.job_id WHERE specialization.job_id IN (");
+                List<String> tags = request.getTags();
 
-            builder.append("SELECT job_id FROM specialization JOIN tag on specialization.tag_id = tag.id WHERE tag.name IN (");
-            for(int i = 0; i < tags.size(); i++) {
-                builder.append("'" + tags.get(i) + "'");
+                builder.append("SELECT job_id FROM specialization JOIN tag on specialization.tag_id = tag.id WHERE tag.name IN (");
+                for (int i = 0; i < tags.size(); i++) {
+                    builder.append("'" + tags.get(i) + "'");
 
-                if(i < tags.size()-1) {
-                    builder.append(", ");
+                    if (i < tags.size() - 1) {
+                        builder.append(", ");
+                    }
                 }
-            }
 
-            builder.append(") GROUP BY job_id HAVING COUNT(job_id) = " + tags.size() + ") ");
+                builder.append(") GROUP BY job_id HAVING COUNT(job_id) = " + tags.size() + ") ");
+            }
         }
 
         return builder.toString();
