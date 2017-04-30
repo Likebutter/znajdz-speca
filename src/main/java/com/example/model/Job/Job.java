@@ -33,13 +33,13 @@ public class Job {
                 referencedColumnName = "ID")
     private Client client;
 
+    @Size(max = 1024)
+    private String description;
+
     private Date beginDate;
     private Date endDate;
     private Date addedAt;
     private String localization;
-
-    @Size(max = 1024)
-    private String description;
 
     public Job() {
     }

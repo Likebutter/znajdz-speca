@@ -3,6 +3,7 @@ package com.example.model.Company;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Company {
@@ -24,9 +25,11 @@ public class Company {
     @NotNull
     private String localization;
 
+    @Size(max = 1024)
+    private String description;
+
     private Integer areaRange;
     private String phoneNumber;
-    private String description;
     private String avatar;
     private float avgRating;
     private int numberJobs;
