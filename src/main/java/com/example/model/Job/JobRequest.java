@@ -11,7 +11,7 @@ public class JobRequest {
     private String title;
     private String beginDate;
     private String endDate;
-    private String location;
+    private String localization;
     private String description;
     private List<String> specializations;
     private List<MultipartFile> images;
@@ -27,7 +27,7 @@ public class JobRequest {
         this.title = title;
         this.beginDate = beginDate;
         this.endDate = endDate;
-        this.location = localization;
+        this.localization = localization;
         this.description = descript;
         this.specializations = specializations;
     }
@@ -56,12 +56,12 @@ public class JobRequest {
         this.endDate = endDate;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocalization() {
+        return localization;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocalization(String localization) {
+        this.localization = localization;
     }
 
     public String getDescription() {

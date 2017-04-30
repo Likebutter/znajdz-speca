@@ -6,6 +6,7 @@ import com.example.model.Company.Company;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.sql.Date;
 
 @Entity
@@ -36,7 +37,9 @@ public class Job {
     private Date endDate;
     private Date addedAt;
     private String localization;
-    private String descript;
+
+    @Size(max = 1024)
+    private String description;
 
     public Job() {
     }
@@ -60,15 +63,15 @@ public class Job {
         this.localization = localization;
         this.company = company;
         this.client = client;
-        this.descript = descript;
+        this.description = descript;
     }
 
     public Job(JobRequest request) {
         this.title = request.getTitle();
         this.beginDate = request.getBeginDateC();
         this.endDate = request.getEndDateC();
-        this.localization = request.getLocation();
-        this.descript = request.getDescription();
+        this.localization = request.getLocalization();
+        this.description = request.getDescription();
     }
 
     public int getId() {
@@ -135,12 +138,12 @@ public class Job {
         this.client = client;
     }
 
-    public String getDescript() {
-        return descript;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescript(String descript) {
-        this.descript = descript;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getTitle() {
@@ -161,7 +164,7 @@ public class Job {
                 ", visible=" + visible +
                 ", company=" + company +
                 ", client=" + client +
-                ", descript='" + descript + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

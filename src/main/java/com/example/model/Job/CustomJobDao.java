@@ -101,21 +101,13 @@ public class CustomJobDao {
 
         StringBuilder builder = new StringBuilder();
 
-        if(request.getLocalizations() != null) {
-            if(!request.getLocalizations().isEmpty()) {
+        if(request.getLocalization() != null) {
+            if(!request.getLocalization().isEmpty()) {
 
                 builder.append("AND (localization IN (");
-                List<String> localizations = request.getLocalizations();
+                String localization = request.getLocalization();
 
-                for(int i = 0; i < localizations.size(); i++) {
-                    builder.append("'" + localizations.get(i) + "'");
-
-                    if(i < (localizations.size() - 1)) {
-                        builder.append(", ");
-                    }
-                }
-
-                builder.append(")) ");
+                builder.append(localization + ")) ");
             }
         }
 
