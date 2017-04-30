@@ -42,6 +42,7 @@ public class DBTestData implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+
         String[] localizations = generateLocations();
         List<Date[][]> dates = generateDates();
         generateClients();
