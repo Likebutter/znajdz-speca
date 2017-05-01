@@ -240,9 +240,6 @@ public class JobController {
         if(job == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        if(clientRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()) == null)
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-
         if(!job.getClient().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -252,9 +249,40 @@ public class JobController {
         if(!validateOpinionRequest(opinionRequest, job))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        if(opinionRepository.findByJob(job) != null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         opinionRepository.save(new Opinion(opinionRequest));
 
-        // TODO: referencja do company
+        // TODO: referencja do firmy
+        return new ResponseEntity<JobResponse>(new JobResponse(job,returnTagListBySpecializations(job))
+                ,HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/job/{id}/accept")
+    public ResponseEntity<JobResponse> acceptJob(@PathVariable Integer id, @RequestBody Integer idCompany){
+        Job job = jobRepository.findOne(id);
+
+        if(job == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if(companyRepository.findOne(idCompany) == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if(!job.getClient().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(!job.getVisible())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(job.getCompany() != null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        job.setCompany(companyRepository.findOne(idCompany));
+        job.setVisible(false);
+
+        jobRepository.save(job);
+
         return new ResponseEntity<JobResponse>(new JobResponse(job,returnTagListBySpecializations(job))
                 ,HttpStatus.OK);
     }
