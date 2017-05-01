@@ -6,6 +6,9 @@ import com.example.model.Client.Client;
 import com.example.model.Client.ClientRepository;
 import com.example.model.Company.Company;
 import com.example.model.Company.CompanyRepository;
+import com.example.model.Opinion.Opinion;
+import com.example.model.Opinion.OpinionRepository;
+import com.example.model.Opinion.OpinionRequest;
 import com.example.model.Photo.*;
 import com.example.model.Specialization.Specialization;
 import com.example.model.Specialization.SpecializationRepository;
@@ -53,6 +56,9 @@ public class JobController {
 
     @Autowired
     private SubmissionRepository submissionRepository;
+
+    @Autowired
+    private OpinionRepository opinionRepository;
 
     @Autowired
     private S3Util s3util;
@@ -225,6 +231,45 @@ public class JobController {
         return new ResponseEntity<JobResponse>(new JobResponse(job,returnTagListBySpecializations(job)),
                 HttpStatus.OK);
 
+    }
+
+    @PostMapping(value = "/job/{id}/opinion")
+    public ResponseEntity<JobResponse> addOpinionToJob(@PathVariable Integer id, @RequestBody OpinionRequest opinionRequest){
+        Job job = jobRepository.findOne(id);
+
+        if(job == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if(clientRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()) == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        if(!job.getClient().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(job.getCompany() == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(!validateOpinionRequest(opinionRequest, job))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        opinionRepository.save(new Opinion(opinionRequest));
+
+        // TODO: referencja do company
+        return new ResponseEntity<JobResponse>(new JobResponse(job,returnTagListBySpecializations(job))
+                ,HttpStatus.OK);
+    }
+
+    private boolean validateOpinionRequest(OpinionRequest opinionRequest, Job job){
+        if (!opinionRequest.getDate().equals(new Date(Calendar.getInstance().getTime().getTime())))
+            return false;
+
+        if(!opinionRequest.getJob().equals(job))
+            return false;
+
+        //TODO: sprawdzenie czy rate jest w odpowiedznim przedziale itp
+        //if(opinionRequest.getRate() between min_rate max_rate)
+
+        return true;
     }
 
     private List<Tag> returnTagListBySpecializations(Job job) {

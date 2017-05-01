@@ -29,6 +29,13 @@ public class Opinion {
     public Opinion() {
     }
 
+    public Opinion(OpinionRequest opinionRequest) {
+        this.date = opinionRequest.getDate();
+        this.job = opinionRequest.getJob();
+        this.text = opinionRequest.getText();
+        this.rate = opinionRequest.getRate();
+    }
+
     public Opinion(Date date, Job job) {
         this.date = date;
         this.job = job;
