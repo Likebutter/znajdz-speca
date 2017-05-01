@@ -4,15 +4,20 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.example.model.AWS.S3Util;
 import com.example.model.Client.Client;
 import com.example.model.Client.ClientRepository;
+import com.example.model.Company.Company;
+import com.example.model.Company.CompanyRepository;
 import com.example.model.Photo.*;
 import com.example.model.Specialization.Specialization;
 import com.example.model.Specialization.SpecializationRepository;
+import com.example.model.Submission.Submission;
+import com.example.model.Submission.SubmissionRepository;
 import com.example.model.Tag.Tag;
 import com.example.model.Tag.TagRepository;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +40,9 @@ public class JobController {
     private ClientRepository clientRepository;
 
     @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
     private TagRepository tagRepository;
 
     @Autowired
@@ -42,6 +50,9 @@ public class JobController {
 
     @Autowired
     private PhotoRepository photoRepository;
+
+    @Autowired
+    private SubmissionRepository submissionRepository;
 
     @Autowired
     private S3Util s3util;
@@ -184,6 +195,60 @@ public class JobController {
         jobRepository.delete(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping(value = "/job/{id}")
+    public ResponseEntity<JobResponse> applyForJob(@PathVariable Integer id){
+
+        Job job = jobRepository.findOne(id);
+
+        if(job == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if(clientRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()) != null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(job.getCompany() != null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(!validateDate(job))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Company company = companyRepository.findByEmail(
+                SecurityContextHolder.getContext().getAuthentication().getName());
+
+        if(company == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        submissionRepository.save(new Submission(company , job));
+
+        return new ResponseEntity<JobResponse>(new JobResponse(job,returnTagListBySpecializations(job)),
+                HttpStatus.OK);
+
+    }
+
+    private List<Tag> returnTagListBySpecializations(Job job) {
+        List<Specialization> specializations = specializationRepository.findAllByJob(job);
+        List<Tag> tags = new ArrayList<>();
+
+        for(Specialization specialization : specializations)
+            tags.add(specialization.getTag());
+
+        return tags;
+    }
+
+    private boolean validateDate(Job job) {
+        Date date = new Date(Calendar.getInstance().getTime().getTime());
+
+        if(job.getBeginDate() != null)
+            if(job.getBeginDate().before(date))
+                return false;
+
+        if(job.getEndDate() != null)
+            if(job.getEndDate().before(date))
+                return false;
+
+        return true;
     }
 
     private Boolean checkIfCorrectRequest(JobRequest job) {

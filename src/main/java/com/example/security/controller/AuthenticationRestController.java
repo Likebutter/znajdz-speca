@@ -61,6 +61,8 @@ public class AuthenticationRestController {
         JwtUser user =  jwtUserDetailsService.loadUserByUsername(jwtAuthenticationRequest.getEmail());
         String token = jwtTokenUtil.generateToken(user);
 
+        MyLogger.log.info("sprawdzenie tokena " + jwtTokenUtil.getEmailFromToken(token));
+
         MyLogger.log.info(this.getClass().getName() + " User info: " + user.getUsername());
         MyLogger.log.info(this.getClass().getName() + " Authentication: " + SecurityContextHolder.getContext().getAuthentication().getName());
         MyLogger.log.info(this.getClass().getName() + " Token info: " +

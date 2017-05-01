@@ -1,5 +1,5 @@
 package com.example.model.Search;
-
+/*
 
 import com.example.model.Company.Company;
 import com.example.model.Company.CompanyRepository;
@@ -147,3 +147,4 @@ public class SearchController {
 
 
 }
+*/
