@@ -78,7 +78,11 @@ public class WebSecurityConfigJava extends WebSecurityConfigurerAdapter {
                        "/**/*.css",
                        "/**/*.js"
                ).permitAll()
-               .antMatchers("/auth/**").permitAll()
+               .antMatchers("/auth/**",
+                            "/client",
+                            "/company",
+                            "/jobs",
+                            "/search/**").permitAll()
                .anyRequest().authenticated();
 
         // Custom JWT based security filter
