@@ -1,6 +1,10 @@
 package com.example.model.Company;
 
 
+import com.example.model.Tag.Tag;
+
+import java.util.List;
+
 public class CompanyResponse {
 
     private Integer id;
@@ -12,6 +16,7 @@ public class CompanyResponse {
     private float avgRating;
     private int numberJobs;
     private int numberOpinions;
+    private List<Tag> tags;
 
     public CompanyResponse() {
     }
@@ -35,9 +40,14 @@ public class CompanyResponse {
         localization = company.getLocalization();
         phone = company.getPhoneNumber();
         description = company.getDescription();
-        avgRating = company.getAvgRating();
+        avgRating = company.getRating();
         numberJobs = company.getNumberJobs();
         numberOpinions = company.getNumberOpinions();
+    }
+
+    public CompanyResponse(Company company, List<Tag> tags) {
+        this(company);
+        this.tags = tags;
     }
 
     public Integer getId() {
@@ -110,6 +120,14 @@ public class CompanyResponse {
 
     public void setNumberOpinions(int numberOpinions) {
         this.numberOpinions = numberOpinions;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     @Override

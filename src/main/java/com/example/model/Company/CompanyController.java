@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Paweł on 2017-04-04.
@@ -39,10 +40,15 @@ public class CompanyController {
     @PostMapping("/company")
     public ResponseEntity<CompanyResponse> createCompany(@RequestBody Company company){
 
-	       if(companyRepository.exists(company.getId()) || !checkIfCorrectRequest(company)){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-            companyRepository.save(company);
+	       if(companyRepository.exists(company.getId()) || !checkIfCorrectRequest(company)) {
+               return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+           }
+
+           Random random = new Random();
+           company.setRating(random.nextFloat()*5.0f);
+	       company.setNumberJobs(random.nextInt(25));
+	       company.setNumberOpinions(random.nextInt(25));
+           companyRepository.save(company);
         return new ResponseEntity<CompanyResponse>(new CompanyResponse(company), HttpStatus.OK);
     }
 
