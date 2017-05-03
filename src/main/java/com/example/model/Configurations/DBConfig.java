@@ -13,6 +13,6 @@ public class DBConfig {
     public CustomJobDao customJobDao() {return new CustomJobDao();}
 
     @Bean
-    public CustomCompanyDao  customComapnyDao() {return new CustomCompanyDao();}
+    public CustomCompanyDao customComapnyDao() {return new CustomCompanyDao();}
 
 }
