@@ -4,15 +4,23 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.example.model.AWS.S3Util;
 import com.example.model.Client.Client;
 import com.example.model.Client.ClientRepository;
+import com.example.model.Company.Company;
+import com.example.model.Company.CompanyRepository;
+import com.example.model.Opinion.Opinion;
+import com.example.model.Opinion.OpinionRepository;
+import com.example.model.Opinion.OpinionRequest;
 import com.example.model.Photo.*;
 import com.example.model.Specialization.Specialization;
 import com.example.model.Specialization.SpecializationRepository;
+import com.example.model.Submission.Submission;
+import com.example.model.Submission.SubmissionRepository;
 import com.example.model.Tag.Tag;
 import com.example.model.Tag.TagRepository;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +50,15 @@ public class JobController {
 
     @Autowired
     private PhotoRepository photoRepository;
+
+    @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
+    private OpinionRepository opinionRepository;
+
+    @Autowired
+    private SubmissionRepository submissionRepository;
 
     @Autowired
     private S3Util s3util;
@@ -186,9 +203,131 @@ public class JobController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PutMapping(value = "/job/{id}")
+    public ResponseEntity<JobResponse> applyForJob(@PathVariable Integer id){
+
+        Job job = jobRepository.findOne(id);
+
+        if(job == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if(clientRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()) != null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(job.getCompany() != null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(!validateDate(job))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Company company = companyRepository.findByEmail(
+                SecurityContextHolder.getContext().getAuthentication().getName());
+
+        if(company == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        submissionRepository.save(new Submission(company , job));
+
+        return new ResponseEntity<JobResponse>(new JobResponse(job,returnTagListBySpecializations(job)),
+                HttpStatus.OK);
+
+    }
+
+    @PostMapping(value = "/job/{id}/opinion")
+    public ResponseEntity<JobResponse> addOpinionToJob(@PathVariable Integer id, @RequestBody OpinionRequest opinionRequest){
+        Job job = jobRepository.findOne(id);
+
+        if(job == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if(!job.getClient().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(job.getCompany() == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(!validateOpinionRequest(opinionRequest, job))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(opinionRepository.findByJob(job) != null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        opinionRepository.save(new Opinion(opinionRequest));
+
+        // TODO: referencja do firmy
+        return new ResponseEntity<JobResponse>(new JobResponse(job,returnTagListBySpecializations(job))
+                ,HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/job/{id}/accept")
+    public ResponseEntity<JobResponse> acceptJob(@PathVariable Integer id, @RequestBody Integer idCompany){
+        Job job = jobRepository.findOne(id);
+
+        if(job == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if(companyRepository.findOne(idCompany) == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if(!job.getClient().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(!job.getVisible())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(job.getCompany() != null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        job.setCompany(companyRepository.findOne(idCompany));
+        job.setVisible(false);
+
+        jobRepository.save(job);
+
+        return new ResponseEntity<JobResponse>(new JobResponse(job,returnTagListBySpecializations(job))
+                ,HttpStatus.OK);
+    }
+
+    private boolean validateOpinionRequest(OpinionRequest opinionRequest, Job job){
+        if (!opinionRequest.getDate().equals(new Date(Calendar.getInstance().getTime().getTime())))
+            return false;
+
+        if(!opinionRequest.getJob().equals(job))
+            return false;
+
+        //TODO: sprawdzenie czy rate jest w odpowiedznim przedziale itp
+        //if(opinionRequest.getRate() between min_rate max_rate)
+
+        return true;
+    }
+
+    private List<Tag> returnTagListBySpecializations(Job job) {
+        List<Specialization> specializations = specializationRepository.findAllByJob(job);
+        List<Tag> tags = new ArrayList<>();
+
+        for(Specialization specialization : specializations)
+            tags.add(specialization.getTag());
+
+        return tags;
+    }
+
+    private boolean validateDate(Job job) {
+        Date date = new Date(Calendar.getInstance().getTime().getTime());
+
+        if(job.getBeginDate() != null)
+            if(job.getBeginDate().before(date))
+                return false;
+
+        if(job.getEndDate() != null)
+            if(job.getEndDate().before(date))
+                return false;
+
+        return true;
+    }
+
+
     private Boolean checkIfCorrectRequest(JobRequest job) {
 
-        if(job.getLocation() == null) return false;
+        if(job.getLocalization() == null) return false;
         if(job.getTitle() == null) return false;
 
         return true;

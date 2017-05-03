@@ -2,16 +2,23 @@ package com.example.model.Company;
 
 import com.example.model.Job.Job;
 import com.example.model.Job.JobRepository;
+import com.example.model.Job.JobResponse;
 import com.example.model.Opinion.Opinion;
 import com.example.model.Opinion.OpinionRepository;
 import com.example.model.Opinion.OpinionResponse;
+import com.example.model.Specialization.Specialization;
+import com.example.model.Specialization.SpecializationRepository;
+import com.example.model.Tag.Tag;
+import com.example.model.Tag.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Paweł on 2017-04-04.
@@ -25,14 +32,23 @@ public class CompanyController {
     private JobRepository jobRepository;
     @Autowired
     private OpinionRepository opinionRepository;
+    @Autowired
+    private TagRepository tagRepository;
+    @Autowired
+    private SpecializationRepository specializationRepository;
 	
     @PostMapping("/company")
     public ResponseEntity<CompanyResponse> createCompany(@RequestBody Company company){
 
-	       if(companyRepository.exists(company.getId()) || !checkIfCorrectRequest(company)){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-            companyRepository.save(company);
+	       if(companyRepository.exists(company.getId()) || !checkIfCorrectRequest(company)) {
+               return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+           }
+
+           Random random = new Random();
+           company.setRating(random.nextFloat()*5.0f);
+	       company.setNumberJobs(random.nextInt(25));
+	       company.setNumberOpinions(random.nextInt(25));
+           companyRepository.save(company);
         return new ResponseEntity<CompanyResponse>(new CompanyResponse(company), HttpStatus.OK);
     }
 
@@ -55,6 +71,9 @@ public class CompanyController {
         if(company == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        if(SecurityContextHolder.getContext().getAuthentication().getName() != company.getEmail())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         Company companyCheck = companyRepository.findByEmail(newCompany.getEmail());
 
         if(companyCheck == null)
@@ -70,7 +89,7 @@ public class CompanyController {
     }
 
     @GetMapping("/company/{id}/jobs")
-    public ResponseEntity<List<Job>> getCompanyJobsById(@PathVariable Integer id){
+    public ResponseEntity<List<JobResponse>> getCompanyJobsById(@PathVariable Integer id){
         Company company = companyRepository.findOne(id);
         if(company == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -80,7 +99,7 @@ public class CompanyController {
         if(jobs.size() == 0)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-        return new ResponseEntity<List<Job>>(jobs,HttpStatus.OK);
+        return new ResponseEntity<List<JobResponse>>(convertJobToJobResponse(jobs),HttpStatus.OK);
     }
 
     @GetMapping("company/{id}/opinions")
@@ -94,8 +113,30 @@ public class CompanyController {
         if(jobs.size() == 0)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
+        List<JobResponse> jobResponses = convertJobToJobResponse(jobs);
+
         return new ResponseEntity<List<OpinionResponse>>(findOpinionResponseByJobs(jobs), HttpStatus.OK);
     }
+
+    private List<JobResponse> convertJobToJobResponse(List<Job> jobs) {
+        List<JobResponse> jobResponses = new ArrayList<>();
+
+        for(Job job : jobs)
+            jobResponses.add(new JobResponse(job, getJobTags(job)));
+
+        return jobResponses;
+    }
+
+    private List<Tag> getJobTags(Job job) {
+        List<Specialization> specializations = specializationRepository.findAllByJob(job);
+        List<Tag> tags = new ArrayList<>();
+
+        for(Specialization spec : specializations)
+            tags.add(spec.getTag());
+
+        return tags;
+    }
+
 
     private Boolean checkIfCorrectRequest(Company company) {
 

@@ -1,6 +1,10 @@
 package com.example.model.Company;
 
 
+import com.example.model.Tag.Tag;
+
+import java.util.List;
+
 public class CompanyResponse {
 
     private Integer id;
@@ -8,10 +12,11 @@ public class CompanyResponse {
     private String email;
     private String localization;
     private String phone;
-    private String descript;
+    private String description;
     private float avgRating;
     private int numberJobs;
     private int numberOpinions;
+    private List<Tag> tags;
 
     public CompanyResponse() {
     }
@@ -22,7 +27,7 @@ public class CompanyResponse {
         this.email = email;
         this.localization = localization;
         this.phone = phone;
-        this.descript = descript;
+        this.description = descript;
         this.avgRating = avgRating;
         this.numberJobs = numberJobs;
         this.numberOpinions = numberOpinions;
@@ -34,10 +39,15 @@ public class CompanyResponse {
         email = company.getEmail();
         localization = company.getLocalization();
         phone = company.getPhoneNumber();
-        descript = company.getDescript();
-        avgRating = company.getAvgRating();
+        description = company.getDescription();
+        avgRating = company.getRating();
         numberJobs = company.getNumberJobs();
         numberOpinions = company.getNumberOpinions();
+    }
+
+    public CompanyResponse(Company company, List<Tag> tags) {
+        this(company);
+        this.tags = tags;
     }
 
     public Integer getId() {
@@ -80,12 +90,12 @@ public class CompanyResponse {
         this.phone = phone;
     }
 
-    public String getDescript() {
-        return descript;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescript(String descript) {
-        this.descript = descript;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public float getAvgRating() {
@@ -112,6 +122,14 @@ public class CompanyResponse {
         this.numberOpinions = numberOpinions;
     }
 
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "CompanyResponse{" +
@@ -120,7 +138,7 @@ public class CompanyResponse {
                 ", email='" + email + '\'' +
                 ", localization='" + localization + '\'' +
                 ", phone='" + phone + '\'' +
-                ", descript='" + descript + '\'' +
+                ", description='" + description + '\'' +
                 ", avgRating=" + avgRating +
                 ", numberJobs=" + numberJobs +
                 ", numberOpinions=" + numberOpinions +

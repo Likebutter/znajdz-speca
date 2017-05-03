@@ -3,6 +3,7 @@ package com.example.model.Company;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Company {
@@ -24,13 +25,13 @@ public class Company {
     @NotNull
     private String localization;
 
-    @NotNull
-    private Integer areaRange;
+    @Size(max = 1024)
+    private String description;
 
+    private Integer areaRange;
     private String phoneNumber;
-    private String descript;
     private String avatar;
-    private float avgRating;
+    private Float rating;
     private int numberJobs;
     private int numberOpinions;
 
@@ -45,16 +46,16 @@ public class Company {
         this.areaRange = areaRange;
     }
 
-    public Company(String name, String email, String password, String localization, Integer areaRange, String phoneNumber, String descript, String avatar, float avgRating, int numberJobs, int numberOpinions) {
+    public Company(String name, String email, String password, String localization, Integer areaRange, String phoneNumber, String descript, String avatar, Float avgRating, int numberJobs, int numberOpinions) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.localization = localization;
         this.areaRange = areaRange;
         this.phoneNumber = phoneNumber;
-        this.descript = descript;
+        this.description = descript;
         this.avatar = avatar;
-        this.avgRating = avgRating;
+        this.rating = avgRating;
         this.numberJobs = numberJobs;
         this.numberOpinions = numberOpinions;
     }
@@ -115,12 +116,12 @@ public class Company {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getDescript() {
-        return descript;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescript(String descript) {
-        this.descript = descript;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getAvatar() {
@@ -131,12 +132,12 @@ public class Company {
         this.avatar = avatar;
     }
 
-    public float getAvgRating() {
-        return avgRating;
+    public Float getRating() {
+        return rating;
     }
 
-    public void setAvgRating(float avgRating) {
-        this.avgRating = avgRating;
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 
     public int getNumberJobs() {
@@ -163,9 +164,9 @@ public class Company {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", descript='" + descript + '\'' +
+                ", description='" + description + '\'' +
                 ", avatar='" + avatar + '\'' +
-                ", avgRating=" + avgRating +
+                ", rating=" + rating +
                 ", numberJobs=" + numberJobs +
                 ", numberOpinions=" + numberOpinions +
                 '}';
