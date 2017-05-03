@@ -8,4 +8,5 @@ public interface ClientRepository extends CrudRepository<Client, Integer> {
     Client findById(Integer id);
 
     Client findByEmail(String email);
+
 }

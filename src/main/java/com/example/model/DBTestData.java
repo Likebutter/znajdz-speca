@@ -42,14 +42,15 @@ public class DBTestData implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+
         String[] localizations = generateLocations();
         List<Date[][]> dates = generateDates();
         generateClients();
         generateCompanies();
         generateActualTags();
         generateJobs(dates, localizations);
-        generateSpecs();
-
+        generateSpecsForJobs();
+        generateSpecsForCompanies();
     }
 
     private Date[][] fillDateTable(Date startDate) {
@@ -195,12 +196,17 @@ public class DBTestData implements CommandLineRunner {
 
     private void generateCompanies() {
 
+        Random random = new Random();
+
         Company company = new Company();
         company.setName("Kowalscy");
         company.setAreaRange(25);
         company.setLocalization("Warszawa");
         company.setEmail("kowalscy@example.com");
         company.setPassword("12345678");
+        company.setRating(random.nextFloat()*5.0f);
+        company.setNumberJobs(1 + random.nextInt(25));
+        company.setNumberOpinions(random.nextInt(company.getNumberJobs() + 1));
         companyRepository.save(company);
 
         Company company2 = new Company();
@@ -209,6 +215,9 @@ public class DBTestData implements CommandLineRunner {
         company2.setLocalization("Poznań");
         company2.setEmail("budex@example.com");
         company2.setPassword("12345678");
+        company2.setRating(random.nextFloat()*5.0f);
+        company2.setNumberJobs(1 + random.nextInt(25));
+        company2.setNumberOpinions(random.nextInt(company2.getNumberJobs() + 1));
         companyRepository.save(company2);
 
         Company company3 = new Company();
@@ -217,6 +226,9 @@ public class DBTestData implements CommandLineRunner {
         company3.setLocalization("Katowice");
         company3.setEmail("januszcompany@example.com");
         company3.setPassword("12345678");
+        company3.setRating(random.nextFloat()*5.0f);
+        company3.setNumberJobs(1 + random.nextInt(25));
+        company3.setNumberOpinions(random.nextInt(company3.getNumberJobs() + 1));
         companyRepository.save(company3);
 
         Company company4 = new Company();
@@ -225,6 +237,9 @@ public class DBTestData implements CommandLineRunner {
         company4.setLocalization("Gdynia");
         company4.setEmail("impex@example.com");
         company4.setPassword("12345678");
+        company4.setRating(random.nextFloat()*5.0f);
+        company4.setNumberJobs(1 + random.nextInt(25));
+        company4.setNumberOpinions(random.nextInt(company4.getNumberJobs() + 1));
         companyRepository.save(company4);
 
         Company company5 = new Company();
@@ -233,6 +248,9 @@ public class DBTestData implements CommandLineRunner {
         company5.setLocalization("Wrocław");
         company5.setEmail("erabox@example.com");
         company5.setPassword("12345678");
+        company5.setRating(random.nextFloat()*5.0f);
+        company5.setNumberJobs(1 + random.nextInt(25));
+        company5.setNumberOpinions(random.nextInt(company5.getNumberJobs() + 1));
         companyRepository.save(company5);
 
     }
@@ -293,12 +311,12 @@ public class DBTestData implements CommandLineRunner {
         return localizations;
     }
 
-    private void generateSpecs() {
+    private void generateSpecsForJobs() {
 
         List<Job> jobs = jobRepository.findAll();
         Random random = new Random();
 
-        for(int i = 0; i < jobs.size(); i++) {
+        for(int i = 0; !jobs.isEmpty(); i++) {
 
             Job job = jobs.get(0);
             jobs.remove(0);
@@ -310,6 +328,29 @@ public class DBTestData implements CommandLineRunner {
                 Tag tag = tagList.get(random.nextInt(tagList.size()));
                 tagList.remove(tag);
                 Specialization specialization = new Specialization(tag, job);
+                specializationRepository.save(specialization);
+            }
+        }
+
+    }
+
+    private void generateSpecsForCompanies() {
+
+        List<Company> companies = companyRepository.findAll();
+        Random random = new Random();
+
+        for(int i = 0; !companies.isEmpty(); i++) {
+
+            Company company = companies.get(0);
+            companies.remove(0);
+            int tagsInCompany = 2 + random.nextInt(4);
+            List<Tag> tagList = tagRepository.findAll();
+
+            for(int j = 0; j < tagsInCompany; j++) {
+
+                Tag tag = tagList.get(random.nextInt(tagList.size()));
+                tagList.remove(tag);
+                Specialization specialization = new Specialization(tag, company);
                 specializationRepository.save(specialization);
             }
         }

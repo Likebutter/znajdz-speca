@@ -41,6 +41,14 @@ public class Opinion {
         this.text = text;
     }
 
+    public Opinion(OpinionRequest opinionRequest) {
+        this.date = opinionRequest.getDate();
+        this.job = opinionRequest.getJob();
+        this.text = opinionRequest.getText();
+        this.rate = opinionRequest.getRate();
+    }
+
+
     public int getId() {
         return id;
     }

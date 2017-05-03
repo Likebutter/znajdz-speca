@@ -3,6 +3,8 @@ package com.example.model.Search;
 
 import com.example.model.Company.Company;
 import com.example.model.Company.CompanyRepository;
+import com.example.model.Company.CompanyResponse;
+import com.example.model.Company.CustomCompanyDao;
 import com.example.model.Job.CustomJobDao;
 import com.example.model.Job.Job;
 import com.example.model.Job.JobResponse;
@@ -32,6 +34,9 @@ public class SearchController {
 
     @Autowired
     private CustomJobDao customJobDao;
+
+    @Autowired
+    private CustomCompanyDao customCompanyDao;
 
     @Autowired
     private SpecializationRepository specializationRepository;
@@ -64,7 +69,7 @@ public class SearchController {
                 String origin = request.getLocalization();
                 Integer searchRange;
 
-                String[] destinations = generateDestinationsArray(foundJobs);
+                String[] destinations = generateJobsDestinationsArray(foundJobs);
                 DistanceMatrix googleMapsResponse = callGoogleMaps(origin, destinations);
 
                 if (googleMapsResponse == null) {
@@ -93,6 +98,54 @@ public class SearchController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/search/company")
+    public ResponseEntity<List<CompanyResponse>> searchForCompanies(@RequestBody SearchCompanyRequest request){
+
+        List<Company> foundCompanies = customCompanyDao.buildAndExecuteSqlQuery(request);
+        List<Company> selectedCompanies = null;
+        List<CompanyResponse> response;
+
+        if(foundCompanies == null)
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        if(foundCompanies.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        if(request.getLocalization() != null) {
+            if(!request.getLocalization().isEmpty()) {
+
+                String origin = request.getLocalization();
+                Integer searchRange;
+
+                String[] destinations = generateCompaniesDestinationsArray(foundCompanies);
+                DistanceMatrix googleMapsResponse = callGoogleMaps(origin, destinations);
+
+                if (googleMapsResponse == null) {
+                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+
+                if (request.getAreaRange() == null)
+                    searchRange = defaultRange * 1000;
+                else
+                    searchRange = request.getAreaRange() * 1000;
+
+                selectedCompanies = new ArrayList<>();
+
+                for (int i = 0; i < foundCompanies.size(); i++) {
+                    if (googleMapsResponse.rows[0].elements[i].distance.inMeters <= searchRange)
+                        selectedCompanies.add(foundCompanies.get(i));
+                }
+            }
+        }
+        else {
+            selectedCompanies = foundCompanies;
+        }
+
+        response = generateCompanyResponse(selectedCompanies);
+
+        return new ResponseEntity<List<CompanyResponse>>(response, HttpStatus.OK);
+    }
+
     private List<JobResponse> generateJobResponse(List<Job> jobs) {
 
         List<JobResponse> response = new ArrayList<>();
@@ -112,7 +165,37 @@ public class SearchController {
         return response;
     }
 
-    private String[] generateDestinationsArray(List<Job> destinations) {
+    private List<CompanyResponse> generateCompanyResponse(List<Company> companies) {
+
+        List<CompanyResponse> response = new ArrayList<>();
+
+        for(Company company : companies) {
+
+            List<Specialization> specs = specializationRepository.findAllByCompany(company);
+            List<Tag> companyTags = new ArrayList<>();
+
+            for(Specialization spec : specs) {
+                companyTags.add(spec.getTag());
+            }
+
+            response.add(new CompanyResponse(company, companyTags));
+        }
+
+        return response;
+    }
+
+    private String[] generateJobsDestinationsArray(List<Job> destinations) {
+
+        String[] destinationsArray = new String[destinations.size()];
+
+        for(int i = 0; i < destinationsArray.length; i++) {
+            destinationsArray[i] = destinations.get(i).getLocalization();
+        }
+
+        return destinationsArray;
+    }
+
+    private String[] generateCompaniesDestinationsArray(List<Company> destinations) {
 
         String[] destinationsArray = new String[destinations.size()];
 

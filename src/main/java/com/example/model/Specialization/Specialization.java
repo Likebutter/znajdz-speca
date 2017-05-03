@@ -21,7 +21,7 @@ public class Specialization {
     private Tag tag;
 
     @ManyToOne
-    @JoinColumn(name = "comapnyID",
+    @JoinColumn(name = "companyId",
                 referencedColumnName = "ID")
     private Company company;
 
