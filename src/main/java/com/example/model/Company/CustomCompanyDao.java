@@ -7,12 +7,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
-public class CustomComapnyDao {
+public class CustomCompanyDao {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public CustomComapnyDao() {
+    public CustomCompanyDao() {
     }
 
     public String buildSqlQuery(SearchCompanyRequest request) {
