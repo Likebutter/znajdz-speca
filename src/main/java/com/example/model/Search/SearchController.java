@@ -4,7 +4,7 @@ package com.example.model.Search;
 import com.example.model.Company.Company;
 import com.example.model.Company.CompanyRepository;
 import com.example.model.Company.CompanyResponse;
-import com.example.model.Company.CustomCompanyDao;
+import com.example.model.Company.CustomComapnyDao;
 import com.example.model.Job.CustomJobDao;
 import com.example.model.Job.Job;
 import com.example.model.Job.JobResponse;
@@ -36,7 +36,7 @@ public class SearchController {
     private CustomJobDao customJobDao;
 
     @Autowired
-    private CustomCompanyDao customCompanyDao;
+    private CustomComapnyDao customCompanyDao;
 
     @Autowired
     private SpecializationRepository specializationRepository;
