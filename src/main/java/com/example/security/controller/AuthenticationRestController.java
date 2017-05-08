@@ -8,6 +8,7 @@ import com.example.security.service.JwtAuthenticationResponse;
 import com.example.security.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -68,6 +69,23 @@ public class AuthenticationRestController {
         MyLogger.log.info(this.getClass().getName() + " Token info: " +
                 jwtTokenUtil.getClaimsFromToken(token).getSubject() + " " + jwtTokenUtil.getClaimsFromToken(token).getExpiration());
 
-        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+        Integer id;
+        String userType;
+
+        if(user.getClient() != null) {
+            id = user.getClient().getId();
+            userType = "Client";
+        }
+        else if(user.getCompany() != null){
+            id = user.getCompany().getId();
+            userType = "Company";
+        }
+        else {
+            return new ResponseEntity<JwtAuthenticationResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        JwtAuthenticationResponse response = new JwtAuthenticationResponse(token, id, userType);
+
+        return ResponseEntity.ok(response);
     }
 }
