@@ -15,6 +15,7 @@ import com.google.maps.DistanceMatrixApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.DistanceMatrix;
+import com.google.maps.model.DistanceMatrixElementStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +57,7 @@ public class SearchController {
         List<Job> foundJobs = customJobDao.buildAndExecuteSqlQuery(request);
         List<Job> selectedJobs = null;
         List<JobResponse> response;
+        Boolean localizationCheck = false;
 
         if(foundJobs == null)
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -84,12 +86,16 @@ public class SearchController {
                 selectedJobs = new ArrayList<>();
 
                 for (int i = 0; i < foundJobs.size(); i++) {
-                    if (googleMapsResponse.rows[0].elements[i].distance.inMeters <= searchRange)
-                        selectedJobs.add(foundJobs.get(i));
+                    if(googleMapsResponse.rows[0].elements[i].status == DistanceMatrixElementStatus.OK)
+                        if (googleMapsResponse.rows[0].elements[i].distance.inMeters <= searchRange)
+                            selectedJobs.add(foundJobs.get(i));
                 }
+
+                localizationCheck = true;
             }
         }
-        else {
+
+        if(!localizationCheck) {
             selectedJobs = foundJobs;
         }
 
@@ -99,20 +105,21 @@ public class SearchController {
     }
 
     @PostMapping(value = "/search/company")
-    public ResponseEntity<List<CompanyResponse>> searchForCompanies(@RequestBody SearchCompanyRequest request){
+    public ResponseEntity<List<CompanyResponse>> searchForCompanies(@RequestBody SearchCompanyRequest request) {
 
         List<Company> foundCompanies = customCompanyDao.buildAndExecuteSqlQuery(request);
         List<Company> selectedCompanies = null;
         List<CompanyResponse> response;
+        Boolean localizationCheck = false;
 
-        if(foundCompanies == null)
+        if (foundCompanies == null)
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-        if(foundCompanies.isEmpty())
+        if (foundCompanies.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-        if(request.getLocalization() != null) {
-            if(!request.getLocalization().isEmpty()) {
+        if (request.getLocalization() != null) {
+            if (!request.getLocalization().isEmpty()) {
 
                 String origin = request.getLocalization();
                 Integer searchRange;
@@ -132,12 +139,15 @@ public class SearchController {
                 selectedCompanies = new ArrayList<>();
 
                 for (int i = 0; i < foundCompanies.size(); i++) {
-                    if (googleMapsResponse.rows[0].elements[i].distance.inMeters <= searchRange)
-                        selectedCompanies.add(foundCompanies.get(i));
+                    if(googleMapsResponse.rows[0].elements[i].status == DistanceMatrixElementStatus.OK)
+                        if (googleMapsResponse.rows[0].elements[i].distance.inMeters <= searchRange)
+                            selectedCompanies.add(foundCompanies.get(i));
                 }
+                localizationCheck = true;
             }
         }
-        else {
+
+        if (!localizationCheck){
             selectedCompanies = foundCompanies;
         }
 
