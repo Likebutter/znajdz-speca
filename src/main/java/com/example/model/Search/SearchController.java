@@ -86,8 +86,9 @@ public class SearchController {
                 selectedJobs = new ArrayList<>();
 
                 for (int i = 0; i < foundJobs.size(); i++) {
-                    if (googleMapsResponse.rows[0].elements[i].distance.inMeters <= searchRange)
-                        selectedJobs.add(foundJobs.get(i));
+                    if(googleMapsResponse.rows[0].elements[i].status == DistanceMatrixElementStatus.OK)
+                        if (googleMapsResponse.rows[0].elements[i].distance.inMeters <= searchRange)
+                            selectedJobs.add(foundJobs.get(i));
                 }
 
                 localizationCheck = true;
