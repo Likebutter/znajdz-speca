@@ -258,6 +258,9 @@ public class SearchController {
         Integer startIndex;
         Integer endIndex;
 
+        if(pageNumber == null)
+            pageNumber = numberPages;
+
         if( (pageNumber > numberPages) || (pageNumber < 0) )
             pageNumber = numberPages;
 
