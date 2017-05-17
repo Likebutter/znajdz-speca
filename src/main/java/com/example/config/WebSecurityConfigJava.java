@@ -55,6 +55,7 @@ public class WebSecurityConfigJava extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationTokenFilter();
     }
 
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
