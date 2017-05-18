@@ -19,6 +19,8 @@ import com.google.maps.model.DistanceMatrixElementStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -99,9 +101,17 @@ public class SearchController {
             selectedJobs = foundJobs;
         }
 
-        response = generateJobResponse(selectedJobs);
+        Integer total = selectedJobs.size();
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        if(!selectedJobs.isEmpty()) {
+            List<Integer> indices = getPageIndices(selectedJobs, request.getPageNumber());
+                selectedJobs = selectedJobs.subList(indices.get(0), indices.get(1));
+        }
+
+        MultiValueMap<String, String> headerContents = new LinkedMultiValueMap<>();
+        headerContents.add("Total", total.toString());
+        response = generateJobResponse(selectedJobs);
+        return new ResponseEntity<>(response, headerContents, HttpStatus.OK);
     }
 
     @PostMapping(value = "/search/company")
@@ -151,9 +161,18 @@ public class SearchController {
             selectedCompanies = foundCompanies;
         }
 
+        Integer total = selectedCompanies.size();
+
+        if(!selectedCompanies.isEmpty()) {
+            List<Integer> indices = getPageIndices(selectedCompanies, request.getPageNumber());
+                selectedCompanies = selectedCompanies.subList(indices.get(0), indices.get(1));
+        }
+
+        MultiValueMap<String, String> headerContents = new LinkedMultiValueMap<>();
+        headerContents.add("Total", total.toString());
         response = generateCompanyResponse(selectedCompanies);
 
-        return new ResponseEntity<List<CompanyResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, headerContents, HttpStatus.OK);
     }
 
     private List<JobResponse> generateJobResponse(List<Job> jobs) {
@@ -233,6 +252,40 @@ public class SearchController {
         return distanceMatrix;
     }
 
+    private List<Integer> getPageIndices(List<?> list, Integer pageNumber) {
 
+        Integer numberPages = new Double((Math.ceil(list.size()/10))).intValue();
+        Integer startIndex;
+        Integer endIndex;
 
+        if(pageNumber == null)
+            pageNumber = numberPages;
+
+        if( (pageNumber > numberPages) || (pageNumber < 0) )
+            pageNumber = numberPages;
+
+        if(pageNumber != 0) {
+
+            startIndex = 10 * (pageNumber-1);
+            if(pageNumber.equals(numberPages))
+                endIndex = list.size();
+            else
+                endIndex = startIndex + 10;
+        }
+        else {
+
+            if((list.size() % 10) == 0)
+                startIndex = list.size() - 10;
+            else
+                startIndex = list.size() - (list.size() % 10);
+
+            endIndex = list.size();
+        }
+
+        List<Integer> indices = new ArrayList<>();
+        indices.add(startIndex);
+        indices.add(endIndex);
+
+        return indices;
+    }
 }

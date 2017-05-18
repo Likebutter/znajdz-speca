@@ -38,6 +38,8 @@ public class CustomCompanyDao {
             firstCondition = false;
         }
 
+        stringBuilder.append("ORDER BY company.id ASC");
+
         return stringBuilder.toString();
     }
 

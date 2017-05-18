@@ -259,14 +259,14 @@ public class JobController {
                 ,HttpStatus.OK);
     }
 
-    @PutMapping(value = "/job/{id}/accept")
-    public ResponseEntity<JobResponse> acceptJob(@PathVariable Integer id, @RequestBody Integer idCompany){
+    @PutMapping(value = "/job/{id}/accept/{companyId}")
+    public ResponseEntity<JobResponse> acceptJob(@PathVariable Integer id, @PathVariable Integer companyId){
         Job job = jobRepository.findOne(id);
 
         if(job == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        if(companyRepository.findOne(idCompany) == null)
+        if(companyRepository.findOne(companyId) == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         if(!job.getClient().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
@@ -278,7 +278,7 @@ public class JobController {
         if(job.getCompany() != null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        job.setCompany(companyRepository.findOne(idCompany));
+        job.setCompany(companyRepository.findOne(companyId));
         job.setVisible(false);
 
         jobRepository.save(job);

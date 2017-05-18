@@ -14,11 +14,12 @@ public class SearchCompanyRequest {
     private Integer numberOpinions;
     private Integer areaRange;
     private List<String> tags;
+    private Integer pageNumber;
 
     public SearchCompanyRequest() {
     }
 
-    public SearchCompanyRequest(String name, String localization, Float rating, Integer numberJobs, Integer numberOpinions, Integer areaRange, List<String> tags) {
+    public SearchCompanyRequest(String name, String localization, Float rating, Integer numberJobs, Integer numberOpinions, Integer areaRange, List<String> tags, Integer pageNumber) {
         this.name = name;
         this.localization = localization;
         this.rating = rating;
@@ -26,5 +27,6 @@ public class SearchCompanyRequest {
         this.numberOpinions = numberOpinions;
         this.areaRange = areaRange;
         this.tags = tags;
+        this.pageNumber = pageNumber;
     }
 }
