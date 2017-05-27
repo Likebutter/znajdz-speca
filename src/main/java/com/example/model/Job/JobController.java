@@ -6,6 +6,7 @@ import com.example.model.Client.Client;
 import com.example.model.Client.ClientRepository;
 import com.example.model.Company.Company;
 import com.example.model.Company.CompanyRepository;
+import com.example.model.Company.CompanyResponse;
 import com.example.model.Opinion.Opinion;
 import com.example.model.Opinion.OpinionRepository;
 import com.example.model.Opinion.OpinionRequest;
@@ -70,7 +71,13 @@ public class JobController {
     @PostMapping(value = "/job", consumes = "multipart/form-data", produces = "application/json")
     public ResponseEntity<JobResponse> addNewJob(@ModelAttribute JobRequest request) {
 
-        request.setClientId(1 + new Random().nextInt(5));
+        Client client = clientRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        if(client == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        request.setClientId(client.getId());
+
         Boolean correct = checkIfCorrectRequest(request);
 
         if(!correct)
@@ -201,6 +208,27 @@ public class JobController {
         jobRepository.delete(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping(value = "/job/{id}/submissions")
+    public ResponseEntity<List<CompanyResponse>> getSubmissionsForJob(@PathVariable Integer id) {
+
+        Job job = jobRepository.findOne(id);
+
+        if(job == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(!job.getClient().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        List<Submission> submissions = submissionRepository.findAllByJob(job);
+        List<CompanyResponse> response = new ArrayList<>();
+
+        for(Submission submission : submissions) {
+            response.add(new CompanyResponse(submission.getCompany()));
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping(value = "/job/{id}")
