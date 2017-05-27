@@ -231,6 +231,7 @@ public class JobController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+
     @PutMapping(value = "/job/{id}")
     public ResponseEntity<JobResponse> applyForJob(@PathVariable Integer id){
 
