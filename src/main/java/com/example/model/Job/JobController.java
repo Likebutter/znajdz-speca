@@ -120,6 +120,69 @@ public class JobController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/commission/{companyId}", consumes = "multipart/form-data", produces = "application/json")
+    public ResponseEntity<JobResponse> addNewCommission(@ModelAttribute JobRequest request, @PathVariable Integer companyId){
+
+
+        Client client = clientRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        if(client == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Company company = companyRepository.findOne(companyId);
+
+        if(company == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        request.setClientId(client.getId());
+
+        Boolean correct = checkIfCorrectRequest(request);
+
+        if(!correct)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if(!convertDates(request))
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        //TODO: po wprowadzeniu tokenów dodać sprawdzanie po tokenie, czy taki użytkownik jest w bazie
+        Client checkedClient = clientRepository.findById(request.getClientId());
+        if(checkedClient == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Job newJob = generateJobObject(request);
+        newJob.setVisible(false);
+        jobRepository.save(newJob);
+        List<Tag> tags = null;
+
+        if(request.getSpecializations() != null) {
+            tags = tagRepository.findByNameIn(request.getSpecializations());
+
+            for (Tag tag : tags) {
+                specializationRepository.save(new Specialization(tag, newJob));
+            }
+        }
+
+        if((request.getImages() != null))
+            if(!request.getImages().isEmpty()) {
+                uploadFiles(request.getImages(), newJob);
+            }
+
+        List<Photo> gallery = photoRepository.findAllByJob(newJob);
+        List<PhotoResponse> photos = new ArrayList<>();
+
+        for(Photo photo : gallery) {
+            photos.add(new PhotoResponse(photo));
+        }
+
+        Submission newSubmission = new Submission(company, newJob);
+        submissionRepository.save(newSubmission);
+
+        JobResponse response = new JobResponse(newJob,tags);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+
     @GetMapping(value = "/jobs")
     public ResponseEntity<List<JobResponse>> getAllJobs() {
 
