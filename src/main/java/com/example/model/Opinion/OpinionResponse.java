@@ -1,8 +1,10 @@
 package com.example.model.Opinion;
 
 import com.example.model.Job.Job;
+import com.example.model.Job.JobResponse;
 import lombok.Data;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -13,16 +15,16 @@ import java.util.Date;
 public class OpinionResponse {
     private int id;
     private Date date;
-    private Job job;
+    private JobResponse jobResponse;
     private String text;
     private int rate;
 
     public OpinionResponse(){}
 
-    public OpinionResponse(Opinion opinion){
+    public OpinionResponse(Opinion opinion, JobResponse jobResponse){
         this.id = opinion.getId();
-        this.date = opinion.getDate();
-        this.job = opinion.getJob();
+        this.date = Calendar.getInstance().getTime();
+        this.jobResponse = jobResponse;
         this.text = opinion.getText();
         this.rate = opinion.getRate();
     }
@@ -30,7 +32,7 @@ public class OpinionResponse {
     public OpinionResponse(int id, Date date, Job job, String text, int rate){
         this.id = id;
         this.date = date;
-        this.job = job;
+      //7  this.job = job;
         this.text = text;
         this.rate = rate;
     }

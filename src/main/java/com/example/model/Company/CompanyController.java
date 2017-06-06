@@ -151,14 +151,17 @@ public class CompanyController {
 
     private List<OpinionResponse> findOpinionResponseByJobs(List<Job> jobs){
         List <Opinion> opinions = new ArrayList<Opinion>();
+        List <JobResponse> jobResponses = new ArrayList<>();
 
-        for(Job job : jobs)
+        for(Job job : jobs) {
             opinions.add(opinionRepository.findByJob(job));
+            jobResponses.add(new JobResponse(job,getJobTags(job)));
+        }
 
         List<OpinionResponse> opinionResponses = new ArrayList<OpinionResponse>();
 
-        for(Opinion opinion : opinions)
-            opinionResponses.add(new OpinionResponse(opinion));
+        for(int i = 0; i<opinionResponses.size(); i++)
+            opinionResponses.add(new OpinionResponse(opinions.get(i), jobResponses.get(i)));
 
         return opinionResponses;
     }

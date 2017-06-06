@@ -40,6 +40,7 @@ public class JwtTokenUtil implements Serializable {
         }
         return email;
     }
+    
 
     public Date getExpirationDateFromToken(String token) {
         Date expiration;
