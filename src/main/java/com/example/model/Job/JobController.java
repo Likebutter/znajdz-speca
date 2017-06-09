@@ -281,7 +281,6 @@ public class JobController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //TODO: Po dodaniu tokenów zakodować sprawdzanie, czy Job należy do klienta określonego przez token
     @DeleteMapping(value = "/job/{id}")
     public ResponseEntity<JobResponse> deleteJob(@PathVariable Integer id) {
 
@@ -350,8 +349,8 @@ public class JobController {
         if(job.getCompany() != null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        if(!validateDate(job))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        //if(!validateDate(job))
+          //  return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         Company company = companyRepository.findByEmail(
                 SecurityContextHolder.getContext().getAuthentication().getName());
